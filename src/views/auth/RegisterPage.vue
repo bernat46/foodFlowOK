@@ -91,6 +91,7 @@
                                 </ion-label>
                                 <ion-toggle
                                     slot="end"
+                                    class="toggle-temsOfUse"
                                     v-model="registration.termsOfUse"
                                     color="secondary"
                                     aria-label="Terms of service"
@@ -457,11 +458,11 @@ ion-button {
     font-weight: 600 !important;
 }
 
-ion-toggle {
-    color: #7c8082 !important;
-    font-weight: 600;
-    opacity: 0.8;
-}
+// ion-toggle {
+//     color: #7c8082 !important;
+//     font-weight: 600;
+//     opacity: 0.8;
+// }
 
 p {
     font-size: 16px !important;
@@ -516,5 +517,8 @@ ion-badge {
     transform: translateY(-50%);
     cursor: pointer;
     z-index: 2;
+}
+.temsOfUse{
+    --track-background-checked:white
 }
 </style>
