@@ -1,0 +1,7 @@
+{
+  "name": "foodFlow-front",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
