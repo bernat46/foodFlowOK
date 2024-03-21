@@ -14,7 +14,8 @@
                                     v-model.trim="registration.email"
                                     type="email"
                                     ref="email"
-                                    :placeholder="$t('auth.registration.email')"
+                                    :label="$t('auth.registration.email')"
+                                    label-placement="floating"
                                     class="form-input"
                                     @ionBlur="checkEmailExists"
                                 ></ion-input>
@@ -24,7 +25,8 @@
                             <form-input :validation="v$.registration" input-name="username">
                                 <ion-input
                                     v-model="registration.username"
-                                    :placeholder="$t('auth.registration.username')"
+                                    :label="$t('auth.registration.username')"
+                                    label-placement="floating"
                                     ref="username"
                                     class="form-input"
                                     @ionBlur="checkUsernameExists"
@@ -42,7 +44,8 @@
                                                 :type="visible ? 'text' : 'password'"
                                                 v-model="registration.password"
                                                 ref="password"
-                                                :placeholder="$t('auth.option_password.password')"
+                                                :label="$t('auth.option_password.password')"
+                                                label-placement="floating"
                                                 @change="
                                                     visible
                                                         ? (registration.confirmPassword = registration.password)
@@ -73,7 +76,8 @@
                                     <ion-input
                                         v-model="registration.confirmPassword"
                                         ref="confirmPassword"
-                                        :placeholder="$t('auth.option_password.confirmPassword')"
+                                        :label="$t('auth.option_password.confirmPassword')"
+                                        label-placement="floating"
                                         type="password"
                                         class="form-input"
                                     ></ion-input>
@@ -331,26 +335,22 @@ export default {
                     password: password,
                 });
 
-                
-
                 await this.$store.dispatch("user/getUserByEmail", email);
 
                 const userData = this.$store.getters["user/getUserPsqlData"];
 
-                await this.$store.dispatch("userNode/userSignin", {
-                    
-                });
+                await this.$store.dispatch("userNode/userSignin", {});
 
-                const {defaultRole,defaultNodeId} = await this.$store.dispatch("user/getUser", {
+                const { defaultRole, defaultNodeId } = await this.$store.dispatch("user/getUser", {
                     userId: userData.userNodeId,
                     sessionToken: userFirebaseData.accessToken,
                 });
-                    // let roleProfilePhoto= await this.getRoleProfilePhoto(defaultNodeId,userFirebaseData.accessToken)
-                    await this.$store.dispatch("userNode/setUserProfile", {
-                        role: defaultRole?this.roleConverter(defaultRole):"user",
-                        nodeId: defaultNodeId? defaultNodeId:userData.userNodeId,
-                        roleImg:null
-                    });
+                // let roleProfilePhoto= await this.getRoleProfilePhoto(defaultNodeId,userFirebaseData.accessToken)
+                await this.$store.dispatch("userNode/setUserProfile", {
+                    role: defaultRole ? this.roleConverter(defaultRole) : "user",
+                    nodeId: defaultNodeId ? defaultNodeId : userData.userNodeId,
+                    roleImg: null,
+                });
 
                 this.isOpenLoading = false;
                 this.$router.push("/feed");
@@ -429,7 +429,7 @@ ion-col {
 }
 
 ion-item {
-    --background:  var(--ion-color-step-850);
+    --background: var(--ion-color-step-850);
     border-radius: 15px;
     margin-bottom: 12px;
     width: 100%;
@@ -518,7 +518,7 @@ ion-badge {
     cursor: pointer;
     z-index: 2;
 }
-.temsOfUse{
-    --track-background-checked:white
+.temsOfUse {
+    --track-background-checked: white;
 }
 </style>
