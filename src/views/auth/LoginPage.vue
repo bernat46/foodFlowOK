@@ -10,7 +10,8 @@
                     <div class="div-login-form">
                         <ion-item>
                             <ion-input
-                                :placeholder="$t('auth.option_password.email')"
+                                :label="$t('auth.option_password.email')"
+                                label-placement="floating"
                                 class="form-input"
                                 type="email"
                                 v-model.trim="email"
@@ -19,7 +20,8 @@
                         <ion-item>
                             <div class="password-input-container">
                                 <ion-input
-                                    :placeholder="$t('auth.option_password.password')"
+                                    :label="$t('auth.option_password.password')"
+                                    label-placement="floating"
                                     class="form-input"
                                     :type="visible ? 'text' : 'password'"
                                     v-model="password"
