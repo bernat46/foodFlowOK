@@ -17,6 +17,13 @@ const routes = [
         component: () => import("@/views/auth/RegisterPage.vue"),
     },
     {
+        path: "/tabs",
+        component: () => import("@/views/TabsPage.vue"),
+        //   meta: {
+        //     requiresAuth: true,
+        // },
+    },
+    {
         path: "/tabs/tab1",
         component: () => import("@/views/Tab1Page.vue"),
         //   meta: {

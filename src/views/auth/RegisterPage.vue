@@ -1,5 +1,5 @@
 <template>
-    <ion-page>
+    <menu-component>
         <ion-grid>
             <ion-row>
                 <ion-col>
@@ -128,7 +128,8 @@
             @dismiss="toggleAlert"
             :type="'error'"
         />
-    </ion-page>
+
+    </menu-component>
 </template>
 
 <script>
@@ -154,6 +155,7 @@ import { useVuelidate } from "@vuelidate/core";
 import countryList from "@/assets/js/countries";
 
 import LanguageChanger from "@/components/settings/LanguageChanger.vue";
+import MenuComponent from "@/components/menu/MenuComponent.vue";
 // import AlertPop from "@/components/alert/Alert.vue";
 
 import {
@@ -193,6 +195,7 @@ export default {
         IonLoading,
         LanguageChanger,
         FormInput,
+        MenuComponent,
         // AlertPop,
     },
     setup() {
