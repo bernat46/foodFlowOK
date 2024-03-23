@@ -24,8 +24,8 @@ const routes = [
         // },
     },
     {
-        path: "/tabs/tab1",
-        component: () => import("@/views/Tab1Page.vue"),
+        path: "/receptes",
+        component: () => import("@/views/ReceptesPage.vue"),
         //   meta: {
         //     requiresAuth: true,
         // },
