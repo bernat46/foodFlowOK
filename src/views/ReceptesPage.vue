@@ -6,7 +6,7 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <div class="header">
+            <div class="header ion-padding">
                 <ion-searchbar
                     bar
                     v-model="searchText"
@@ -22,14 +22,14 @@
             <ion-grid>
                 <ion-row>
                     <ion-col size="12" size-md="6" size-lg="3" v-for="recipe in filteredRecipes" :key="recipe.id">
-                        <ion-card color="primary">
+                        <ion-card class="recepte-card">
                             <ion-card-header class="header">
-                                <ion-card-title class="">{{ recipe.title }}</ion-card-title>
+                                <ion-card-title class="text-black">{{ recipe.title }}</ion-card-title>
                                 <ion-button @click="openModal(recipe)">
                                     <ion-icon slot="icon-only" :icon="pencilOutline"></ion-icon>
                                 </ion-button>
                             </ion-card-header>
-                            <ion-card-content>
+                            <ion-card-content class="text-black">
                                 {{ recipe.description }}
                             </ion-card-content>
                         </ion-card>
@@ -248,5 +248,11 @@ ion-title {
 }
 .div-ingredientes {
     display: flex;
+}
+.recepte-card{
+    border:1px solid var(--ion-color-primary)
+}
+.text-black{
+    color:black;
 }
 </style>
