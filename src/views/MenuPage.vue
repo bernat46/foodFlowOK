@@ -12,7 +12,7 @@
                         <ion-col size="11" class="ion-datetime-button ion-padding-horizontal">
                             <ion-label style="font-weight: bold">Selecciona mes y año</ion-label>
                             <ion-datetime-button color="secondary" datetime="datetime"></ion-datetime-button>
-                            <ion-modal :keep-contents-mounted="true">
+                            <ion-modal :keep-contents-mounted="true" class="dateModal">
                                 <ion-datetime
                                     v-model="selectedDate"
                                     color="secondary"
@@ -73,7 +73,7 @@
                                                 .dishes"
                                             :key="mealIndex"
                                         >
-                                            <div>{{ getPlatName(idDish) }}</div>
+                                            <div>{{ getPlat(idDish).name }}</div>
                                         </div>
                                     </div>
                                 </ion-col>
@@ -93,6 +93,7 @@
         :backdrop-dismiss="false"
         :initial-breakpoint="1"
         :breakpoints="[0, 1]"
+        class="selectPlato"
     >
         <ion-header>
             <ion-toolbar color="primary">
@@ -122,64 +123,55 @@
         <ion-content>
             <div class="select-day-cards ion-padding">
                 <ion-card>
-                    <ion-card-content>
-                        <ion-select
-                            interface="action-sheet"
-                            :toggle-icon="add"
-                            :expanded-icon="remove"
-                            aria-label="fruit"
-                            color="black"
-                            placeholder="Selecciona el primer plato"
-                        >
-                            <template v-for="plat in plats" :key="plat">
-                                <ion-select-option v-if="plat.type !== 2" :value="plat.id" style="color: red">{{
-                                    plat.name
-                                }}</ion-select-option>
-                            </template>
-                        </ion-select>
+                    <ion-card-content v-if="selectedDay">
+                        <ion-input
+                            label="Selecciona el primer"
+                            :value="selectedFirstDish.name"
+                            readonly
+                            @click="openPopover(0)"
+                        ></ion-input>
                     </ion-card-content>
                 </ion-card>
                 <ion-card>
-                    <ion-card-content>
-                        <ion-input placeholder="Selecciona el segundo" :value="selectedPlat?selectedPlat.name:''" readonly @click="openPopover"></ion-input>
+                    <ion-card-content v-if="selectedDay">
+                        <ion-input
+                            label="Selecciona el segundo"
+                            :value="selectedSecondDish.name"
+                            readonly
+                            @click="openPopover(1)"
+                        ></ion-input>
                     </ion-card-content>
                 </ion-card>
 
                 <ion-card>
-                    <ion-card-content>
-                        <ion-select
-                            :toggle-icon="add"
-                            :expanded-icon="remove"
-                            color="black"
-                            placeholder="Selecciona el postre"
-                            class="custom-select"
-                        >
-                            <template v-for="plat in plats" :key="plat">
-                                <ion-select-option v-if="plat.type == 2" :value="plat.id">{{
-                                    plat.name
-                                }}</ion-select-option>
-                            </template>
-                        </ion-select></ion-card-content
-                    >
+                    <ion-card-content v-if="selectedDay">
+                        <ion-input
+                            label="Selecciona el postre"
+                            :value="selectedDessertDish.name"
+                            readonly
+                            @click="openPopover(2)"
+                        ></ion-input>
+                    </ion-card-content>
                 </ion-card>
             </div>
         </ion-content>
         <ion-footer>
             <ion-toolbar>
-                <ion-buttons slot="end">
-                    <!-- <ion-button fill="solid" color="primary" @click="saveRecipe()">{{
-                        $t("common.guardar")
-                    }}</ion-button> -->
-                </ion-buttons>
+                <ion-buttons slot="end"> </ion-buttons>
             </ion-toolbar>
         </ion-footer>
     </ion-modal>
     <ion-popover :is-open="showPopover" @didDismiss="showPopover = false">
-        <ion-searchbar v-model="searchText"></ion-searchbar>
+        <ion-searchbar v-model="searchText" color="primary"></ion-searchbar>
         <ion-list>
             <ion-item v-for="plat in filteredPlats" :key="plat.id" @click="selectPlat(plat)">
-                <ion-label>{{ plat.name }} | <span style="font-size:13px; color:var(--ion-color-secondary)" class="ion-text-capitalize">{{ getTypeString(plat.type) }}</span></ion-label>
-  </ion-item>
+                <ion-label
+                    >{{ plat.name }} |
+                    <span style="font-size: 13px; color: var(--ion-color-secondary)" class="ion-text-capitalize">{{
+                        getTypeString(plat.type)
+                    }}</span></ion-label
+                >
+            </ion-item>
         </ion-list>
     </ion-popover>
 </template>
@@ -202,8 +194,6 @@ import {
     IonButton,
     IonText,
     IonButtons,
-    IonSelect,
-    IonSelectOption,
     IonCardContent,
     IonCard,
     IonFooter,
@@ -211,10 +201,10 @@ import {
     IonInput,
     IonItem,
     IonList,
-    IonSearchbar
+    IonSearchbar,
 } from "@ionic/vue";
 import { ref, computed, onMounted } from "vue";
-import { addOutline, close, add, remove } from "ionicons/icons";
+import { addOutline, close } from "ionicons/icons";
 
 const currentDate = new Date();
 const currentYearMonth = ref("");
@@ -223,9 +213,14 @@ const showModal = ref(false);
 const showPopover = ref(false);
 const newMonthMenu = ref(null);
 const selectedDay = ref(null);
+const selectedFirstDish = ref({ id: null, type: null, name: null, allergens: [], ingredients: [] });
+const selectedSecondDish = ref({ id: null, type: null, name: null, allergens: [], ingredients: [] });
+const selectedDessertDish = ref({ id: null, type: null, name: null, allergens: [], ingredients: [] });
 
 const selectedPlat = ref(null);
 const searchText = ref("");
+
+const tipoPlato = ref(null);
 
 const isMobile = ref(window.innerWidth <= 576); // Establece el valor inicial basado en el ancho de la ventana
 
@@ -676,7 +671,7 @@ const getNextMonth = () => {
 
 const minDate = computed(() => {
     let min = menus.value.reduce((min, menu) => (menu.date < min ? menu.date : min), menus.value[0].date);
-    const [month, year] = min.split("-");
+    const [year, month] = min.split("-");
     const monthPadded = month.padStart(2, "0"); // Afegeix un zero al davant si el mes és menor que 10
     min = `${year}-${monthPadded}-01T00:00:00`; // Canviem l'ordre de l'any i el mes, i afegim el dia i l'hora
     return min;
@@ -684,7 +679,7 @@ const minDate = computed(() => {
 
 const maxDate = computed(() => {
     let max = menus.value.reduce((max, menu) => (menu.date > max ? menu.date : max), menus.value[0].date);
-    const [month, year] = max.split("-");
+    const [year, month] = max.split("-");
     const monthPadded = month.padStart(2, "0"); // Afegeix un zero al davant si el mes és menor que 10
     max = `${year}-${monthPadded}-01T23:59:59`; // Canviem l'ordre de l'any i el mes, i afegim el dia i l'hora
     return max;
@@ -784,16 +779,22 @@ const createNewMenu = () => {
 };
 
 // Función para obtener el nombre de un plato dado su ID
-function getPlatName(id) {
+function getPlat(id) {
     const plat = plats.value.find((plat) => plat.id === id);
-    return plat ? plat.name : "Selecciona un plat";
+    return plat ? plat : "Selecciona un plat";
 }
 
 function openModal(day) {
     selectedDay.value = day;
     showModal.value = true;
+    if (day.meals && day.meals.dishes.length>0) {
+        selectedFirstDish.value = getPlat(day.meals.dishes[0]);
+        selectedSecondDish.value = getPlat(day.meals.dishes[1]);
+        selectedDessertDish.value = getPlat(day.meals.dishes[2]);
+    }
 }
-function openPopover() {
+function openPopover(dishType) {
+    tipoPlato.value = dishType;
     showPopover.value = true;
 }
 
@@ -802,26 +803,38 @@ const selectPlat = (plat) => {
     showPopover.value = false;
 };
 
+// const filteredPlats = computed(() => {
+//     if (searchText.value) {
+//         return plats.value.filter((plat) => plat.name.toLowerCase().includes(searchText.value.toLowerCase()));
+//     } else {
+//         return plats.value;
+//     }
+// });
 const filteredPlats = computed(() => {
-    if (searchText.value) {
-        return plats.value.filter((plat) => plat.name.toLowerCase().includes(searchText.value.toLowerCase()));
-    } else {
-        return plats.value;
-    }
+    return plats.value.filter((plat) => {
+        const nameMatches = searchText.value ? plat.name.toLowerCase().includes(searchText.value.toLowerCase()) : true;
+        let typeMatches = true;
+        if (tipoPlato.value === 0 || tipoPlato.value === 1) {
+            typeMatches = plat.type !== 2;
+        } else if (tipoPlato.value === 2) {
+            typeMatches = plat.type !== 0 && plat.type !== 1;
+        }
+        return nameMatches && typeMatches;
+    });
 });
 
 const getTypeString = (type) => {
-            switch (type) {
-                case 0:
-                    return 'proteina';
-                case 1:
-                    return 'carbohidrat';
-                case 2:
-                    return 'postre';
-                default:
-                    return 'desconocido';
-            }
-        };
+    switch (type) {
+        case 0:
+            return "proteina";
+        case 1:
+            return "carbohidrat";
+        case 2:
+            return "postre";
+        default:
+            return "desconocido";
+    }
+};
 
 onMounted(() => {
     currentYearMonth.value = getCurrentYearMonth();
@@ -874,10 +887,6 @@ ion-datetime-button::part(native) {
     display: flex;
     align-items: center;
 }
-ion-modal {
-    --height: 60vh;
-    --width: 60vw;
-}
 .select-day-cards {
     height: 100%;
     overflow: hidden;
@@ -888,67 +897,17 @@ ion-modal {
         border: 1px solid var(--ion-color-primary);
     }
 }
-ion-select {
-    --placeholder-color: black;
-    width: 100%;
-    justify-content: center;
-}
-ion-select::part(container),
-ion-select::part(label),
-ion-select::part(placeholder),
-ion-select::part(icon),
-ion-select::part(text) {
-    justify-content: center;
-    color: black;
-    font-size: 20px;
-    font-weight: 500;
-}
-ion-select::part(placeholder),
-ion-select::part(text) {
-    flex: 0 0 auto;
-}
-
-ion-select::part(placeholder) {
-    font-size: 20px;
-    font-weight: 500;
-}
-.custom-select .select-interface-action-sheet .select-button {
-    /* Afegeix aquí els estils CSS per modificar el color del botó */
-    background-color: blue; /* Canvia el color de fons */
-    color: white; /* Canvia el color del text */
-}
-ion-action-sheet .action-sheet-group {
-    background: #f58840;
-}
-
-ion-action-sheet .action-sheet-title {
-    color: #fff;
-}
-
-ion-action-sheet .action-sheet-cancel::after {
-    background: #e97223;
-}
-
-ion-action-sheet .action-sheet-button,
-ion-action-sheet .action-sheet-button.ion-focused {
-    color: #000000;
-}
-
-@media (any-hover: hover) {
-    ion-action-sheet .action-sheet-button:hover {
-        color: #000000;
-    }
-}
-
-ion-action-sheet ion-backdrop {
-    opacity: 0.6;
-}
-ion-popover{
-    position:absolute;
-    --width:25vw;
+ion-popover {
+    position: absolute;
+    --width: 25vw;
+    --height: 33vh;
 }
 ion-popover::part(content) {
     position: absolute;
     left: 35%;
+}
+ion-modal.selectPlato {
+    --height: 60vh;
+    --width: 60vw;
 }
 </style>
