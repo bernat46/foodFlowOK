@@ -66,7 +66,18 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-contrast-rgb: 0, 0, 0;
     --ion-color-light-shade: #d7d8da;
     --ion-color-light-tint: #f5f6f9;
+
+
+    --huevo:#f69d1d;
+    --carne:#ff1206;
+    --fsecos:#cd7b53;
+    --gluten:#eec40d;
+    --lacteos:#8f8fb3;
+    --marisco:#ff6668;
+    --pescado:#3fbbd3;
 }
+
+
 
 @media (prefers-color-scheme: dark) {
     /*

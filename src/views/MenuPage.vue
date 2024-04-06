@@ -82,9 +82,65 @@
                     </template>
                 </ion-grid>
             </template>
-            <template v-else>
-                <ion-datetime presentation="date"></ion-datetime>
-            </template>
+            <div class="div-mobile">
+                <div class="datetime-mobile ion-padding-vertical">
+                    <ion-datetime
+                        v-model="selectedDate"
+                        presentation="date"
+                        class="mobile-datetime"
+                        :min="minDate"
+                        :max="maxDate"
+                        @ionChange="updateSelectedDate($event)"
+                    ></ion-datetime>
+                    <ion-button @click="createNewMenu()" class="newMenuButtonMobile">
+                                <ion-icon slot="icon-only" :icon="addOutline" ></ion-icon>
+                            </ion-button>
+                </div>
+                <ion-list class="days-menu-list" lines="inset" ref="ionListMenuDays">
+                    <div v-for="(day, index) in daysInMonth" :key="index">
+                        <div v-if="day.dayOfMonth !== ''">
+                            <ion-item :ref="(el) => (daysMonthRef[day.dayOfMonth] = el)">
+                                <ion-label class="day-mobile-label"
+                                    >{{ day.dayOfMonth }} {{ $t(`common.mesos.${obtenerMes(selectedDate)}`) }}
+                                    {{ selectedDate.split("-")[0] }}
+                                    <ion-button
+                                        class="save-button"
+                                        color="primary"
+                                        fill="solid"
+                                        @click="openModal(day)"
+                                    >
+                                        Editar
+                                    </ion-button>
+                                </ion-label>
+                            </ion-item>
+                            <ion-item v-for="(dish, dishIndex) in day.meals.dishes" :key="dishIndex" class="item-dish">
+                                <ion-label style="width: fit-content"
+                                    >{{ getPlat(dish).name }}
+                                    <span
+                                        style="font-size: 13px; color: var(--ion-color-secondary)"
+                                        class="ion-text-capitalize"
+                                        >{{ getTypeString(getPlat(dish).type) }}</span
+                                    ></ion-label
+                                >
+                                <div class="icon-group">
+                                    <div
+                                        v-for="(allergen, index) in getPlat(dish).allergens"
+                                        :key="index"
+                                        class="circle circle-mobile"
+                                        :class="allergen.toLowerCase()"
+                                    >
+                                        <ion-icon
+                                            size="medium"
+                                            :src="'/allergies/' + allergen.toLowerCase() + '.svg'"
+                                            alt="allergen"
+                                        ></ion-icon>
+                                    </div>
+                                </div>
+                            </ion-item>
+                        </div>
+                    </div>
+                </ion-list>
+            </div>
         </ion-content>
     </ion-page>
     <ion-modal
@@ -93,7 +149,7 @@
         :backdrop-dismiss="false"
         :initial-breakpoint="1"
         :breakpoints="[0, 1]"
-        class="selectPlato"
+        class="selectDish"
     >
         <ion-header>
             <ion-toolbar color="primary">
@@ -122,46 +178,156 @@
         </ion-header>
         <ion-content>
             <div class="select-day-cards ion-padding">
-                <ion-card>
+                <ion-card @click="openPopover(0)" id="firstOpenPopover">
                     <ion-card-content v-if="selectedDay">
-                        <ion-input
-                            label="Selecciona el primer"
-                            :value="selectedFirstDish.name"
-                            readonly
-                            @click="openPopover(0)"
-                        ></ion-input>
+                        <div v-if="selectedFirstDish.name == null" class="card-label">
+                            <label>Selecciona el primer</label>
+                        </div>
+                        <template v-else>
+                            <div class="select-dish-class">
+                                <h2 class="ion-padding-horizontal">
+                                    {{ selectedFirstDish.name }}
+                                    <span> {{ getTypeString(selectedFirstDish.type) }}</span>
+                                </h2>
+                                <div class="ion-padding">
+                                    <h3 class="ion-padding-bottom">Ingredients:</h3>
+                                    <ion-chip-group>
+                                        <ion-chip
+                                            v-for="(ingredient, index) in selectedFirstDish.ingredients"
+                                            size="small"
+                                            :key="index"
+                                        >
+                                            {{ ingredient }}
+                                        </ion-chip>
+                                    </ion-chip-group>
+                                </div>
+                                <div class="ion-padding">
+                                    <ion-icon-group v-if="selectedFirstDish.allergens.length > 0" class="icon-group">
+                                        <div
+                                            v-for="(allergen, index) in selectedFirstDish.allergens"
+                                            :key="index"
+                                            class="circle"
+                                            :class="allergen.toLowerCase()"
+                                        >
+                                            <ion-icon
+                                                size="large"
+                                                :src="'/allergies/' + allergen.toLowerCase() + '.svg'"
+                                                alt="allergen"
+                                            ></ion-icon>
+                                        </div>
+                                    </ion-icon-group>
+                                </div>
+                            </div>
+                        </template>
                     </ion-card-content>
                 </ion-card>
-                <ion-card>
+                <ion-card @click="openPopover(1)">
                     <ion-card-content v-if="selectedDay">
-                        <ion-input
-                            label="Selecciona el segundo"
-                            :value="selectedSecondDish.name"
-                            readonly
-                            @click="openPopover(1)"
-                        ></ion-input>
+                        <div v-if="selectedSecondDish.name == null" class="card-label">
+                            <label>Selecciona el segundo</label>
+                        </div>
+                        <template v-else>
+                            <div class="select-dish-class">
+                                <h2 class="ion-padding-horizontal">
+                                    {{ selectedSecondDish.name }}
+                                    <span>{{ getTypeString(selectedSecondDish.type) }}</span>
+                                </h2>
+                                <div class="ion-padding">
+                                    <h3 class="ion-padding-bottom">Ingredients:</h3>
+                                    <ion-chip-group>
+                                        <ion-chip
+                                            v-for="(ingredient, index) in selectedSecondDish.ingredients"
+                                            size="small"
+                                            :key="index"
+                                        >
+                                            {{ ingredient }}
+                                        </ion-chip>
+                                    </ion-chip-group>
+                                </div>
+                                <div class="ion-padding">
+                                    <ion-icon-group v-if="selectedSecondDish.allergens.length > 0" class="icon-group">
+                                        <div
+                                            v-for="(allergen, index) in selectedSecondDish.allergens"
+                                            :key="index"
+                                            class="circle"
+                                            :class="allergen.toLowerCase()"
+                                        >
+                                            <ion-icon
+                                                size="large"
+                                                :src="'/allergies/' + allergen.toLowerCase() + '.svg'"
+                                                alt="allergen"
+                                            ></ion-icon>
+                                        </div>
+                                    </ion-icon-group>
+                                </div>
+                            </div>
+                        </template>
                     </ion-card-content>
                 </ion-card>
 
-                <ion-card>
+                <ion-card @click="openPopover(2)">
                     <ion-card-content v-if="selectedDay">
-                        <ion-input
-                            label="Selecciona el postre"
-                            :value="selectedDessertDish.name"
-                            readonly
-                            @click="openPopover(2)"
-                        ></ion-input>
+                        <div v-if="selectedDessertDish.name == null" class="card-label">
+                            <label>Selecciona el postre </label>
+                        </div>
+                        <template v-else>
+                            <div class="select-dish-class">
+                                <h2 class="ion-padding-horizontal">
+                                    {{ selectedDessertDish.name }}
+                                    <span>{{ getTypeString(selectedDessertDish.type) }}</span>
+                                </h2>
+                                <div class="ion-padding">
+                                    <h3 class="ion-padding-bottom">Ingredients:</h3>
+                                    <ion-chip-group>
+                                        <ion-chip
+                                            v-for="(ingredient, index) in selectedDessertDish.ingredients"
+                                            size="small"
+                                            :key="index"
+                                        >
+                                            {{ ingredient }}
+                                        </ion-chip>
+                                    </ion-chip-group>
+                                </div>
+
+                                <div class="ion-padding">
+                                    <ion-icon-group v-if="selectedDessertDish.allergens.length > 0" class="icon-group">
+                                        <div
+                                            v-for="(allergen, index) in selectedDessertDish.allergens"
+                                            :key="index"
+                                            class="circle"
+                                            :class="allergen.toLowerCase()"
+                                        >
+                                            <ion-icon
+                                                size="large"
+                                                :src="'/allergies/' + allergen.toLowerCase() + '.svg'"
+                                                alt="allergen"
+                                            ></ion-icon>
+                                        </div>
+                                    </ion-icon-group>
+                                </div>
+                            </div>
+                        </template>
                     </ion-card-content>
                 </ion-card>
             </div>
         </ion-content>
         <ion-footer>
             <ion-toolbar>
-                <ion-buttons slot="end"> </ion-buttons>
+                <ion-buttons slot="end"
+                    ><ion-button
+                        class="save-button"
+                        color="primary"
+                        fill="solid"
+                        @click="saveMenuDay(selectedFirstDish, selectedSecondDish, selectedDessertDish)"
+                    >
+                        <ion-icon color slot="end" :icon="save"></ion-icon>
+                        Guardar
+                    </ion-button>
+                </ion-buttons>
             </ion-toolbar>
         </ion-footer>
     </ion-modal>
-    <ion-popover :is-open="showPopover" @didDismiss="showPopover = false">
+    <ion-popover :is-open="showPopover" @didDismiss="showPopover = false" side="center" alignment="center" reference="event" size="auto">
         <ion-searchbar v-model="searchText" color="primary"></ion-searchbar>
         <ion-list>
             <ion-item v-for="plat in filteredPlats" :key="plat.id" @click="selectPlat(plat)">
@@ -198,13 +364,13 @@ import {
     IonCard,
     IonFooter,
     IonPopover,
-    IonInput,
     IonItem,
     IonList,
     IonSearchbar,
+    IonChip,
 } from "@ionic/vue";
 import { ref, computed, onMounted } from "vue";
-import { addOutline, close } from "ionicons/icons";
+import { addOutline, close, save } from "ionicons/icons";
 
 const currentDate = new Date();
 const currentYearMonth = ref("");
@@ -213,6 +379,8 @@ const showModal = ref(false);
 const showPopover = ref(false);
 const newMonthMenu = ref(null);
 const selectedDay = ref(null);
+const daysMonthRef = ref({});
+const ionListMenuDays = ref(null);
 const selectedFirstDish = ref({ id: null, type: null, name: null, allergens: [], ingredients: [] });
 const selectedSecondDish = ref({ id: null, type: null, name: null, allergens: [], ingredients: [] });
 const selectedDessertDish = ref({ id: null, type: null, name: null, allergens: [], ingredients: [] });
@@ -240,7 +408,7 @@ const plats = ref([
         id: 2,
         type: 1,
         name: "Pasta al pesto",
-        allergens: ["Frutos secos"],
+        allergens: ["fsecos"],
         ingredients: ["Pasta", "Pesto", "Piñones", "Albahaca", "Ajo", "Queso parmesano", "Aceite de oliva"],
     },
     {
@@ -279,7 +447,7 @@ const plats = ref([
         id: 6,
         type: 2,
         name: "Pastel de zanahoria",
-        allergens: ["Frutos secos"],
+        allergens: ["fsecos"],
         ingredients: [
             "Zanahoria",
             "Harina",
@@ -287,7 +455,7 @@ const plats = ref([
             "Aceite de girasol",
             "Nuez moscada",
             "Canela",
-            "Huevos",
+            "huevo",
             "Levadura",
             "Queso crema",
             "Mantequilla",
@@ -297,7 +465,7 @@ const plats = ref([
         id: 7,
         type: 0,
         name: "Ensalada de tomate y mozzarella",
-        allergens: ["Lácteos"],
+        allergens: ["lacteos"],
         ingredients: ["Tomate", "Mozzarella", "Albahaca", "Aceite de oliva", "Vinagre balsámico", "Sal", "Pimienta"],
     },
     {
@@ -318,7 +486,7 @@ const plats = ref([
         id: 10,
         type: 1,
         name: "Gazpacho",
-        allergens: [],
+        allergens: ["pescado"],
         ingredients: [
             "Tomate",
             "Pimiento",
@@ -335,7 +503,7 @@ const plats = ref([
         id: 11,
         type: 1,
         name: "Lasaña vegetal",
-        allergens: ["Lácteos", "Gluten"],
+        allergens: ["lacteos", "gluten"],
         ingredients: [
             "Láminas de lasaña",
             "Berenjena",
@@ -356,14 +524,14 @@ const plats = ref([
         id: 12,
         type: 2,
         name: "Flan de huevo",
-        allergens: ["Huevos", "Lácteos"],
-        ingredients: ["Leche", "Huevos", "Azúcar", "Vainilla"],
+        allergens: ["huevo", "lacteos"],
+        ingredients: ["Leche", "huevo", "Azúcar", "Vainilla"],
     },
     {
         id: 13,
         type: 0,
         name: "Ensalada Waldorf",
-        allergens: ["Frutos secos", "Apio"],
+        allergens: ["fsecos"],
         ingredients: [
             "Manzana",
             "Apio",
@@ -433,7 +601,7 @@ const plats = ref([
         id: 18,
         type: 2,
         name: "Tarta de manzana",
-        allergens: ["Gluten", "Lácteos"],
+        allergens: ["gluten", "lacteos"],
         ingredients: ["Masa quebrada", "Manzana", "Azúcar", "Canela", "Mantequilla", "Harina", "Huevo"],
     },
     {
@@ -478,7 +646,7 @@ const plats = ref([
         id: 21,
         type: 2,
         name: "Helado de vainilla",
-        allergens: ["Lácteos"],
+        allergens: ["lacteos"],
         ingredients: ["Leche", "Nata", "Azúcar", "Yema de huevo", "Vainilla"],
     },
     {
@@ -502,7 +670,7 @@ const plats = ref([
         id: 23,
         type: 1,
         name: "Arroz negro",
-        allergens: [],
+        allergens: ["carne", "fsecos", "gluten", "huevo", "lacteos", "marisco", "pescado"],
         ingredients: [
             "Arroz",
             "Sepia",
@@ -528,7 +696,7 @@ const plats = ref([
         id: 25,
         type: 1,
         name: "Pizza vegetal",
-        allergens: ["Gluten", "Lácteos"],
+        allergens: ["gluten", "lacteos"],
         ingredients: [
             "Masa de pizza",
             "Tomate frito",
@@ -549,12 +717,12 @@ const plats = ref([
         id: 26,
         type: 2,
         name: "Tiramisú",
-        allergens: ["Huevos", "Lácteos"],
+        allergens: ["huevo", "lacteos"],
         ingredients: [
             "Café",
             "Licor de café",
             "Bizcochos de soletilla",
-            "Huevos",
+            "huevo",
             "Azúcar",
             "Queso mascarpone",
             "Cacao en polvo",
@@ -564,7 +732,7 @@ const plats = ref([
         id: 27,
         type: 1,
         name: "Ensalada de pasta",
-        allergens: ["Gluten"],
+        allergens: ["gluten"],
         ingredients: [
             "Pasta corta",
             "Tomate cherry",
@@ -581,7 +749,7 @@ const plats = ref([
         id: 28,
         type: 0,
         name: "Pechuga de pollo empanizada",
-        allergens: ["Gluten"],
+        allergens: ["gluten"],
         ingredients: ["Pechuga de pollo", "Harina", "Huevo", "Pan rallado", "Aceite de oliva", "Sal", "Pimienta"],
     },
     {
@@ -680,8 +848,9 @@ const minDate = computed(() => {
 const maxDate = computed(() => {
     let max = menus.value.reduce((max, menu) => (menu.date > max ? menu.date : max), menus.value[0].date);
     const [year, month] = max.split("-");
-    const monthPadded = month.padStart(2, "0"); // Afegeix un zero al davant si el mes és menor que 10
-    max = `${year}-${monthPadded}-01T23:59:59`; // Canviem l'ordre de l'any i el mes, i afegim el dia i l'hora
+    const lastDayOfMonth = new Date(year, month, 0).getDate(); // Obtiene el último día del mes
+    const monthPadded = month.padStart(2, "0"); // Añade un cero al principio si el mes es menor que 10
+    max = `${year}-${monthPadded}-${lastDayOfMonth}T23:59:59`; // Cambia el orden del año y el mes, y añade el día y la hora
     return max;
 });
 
@@ -787,7 +956,7 @@ function getPlat(id) {
 function openModal(day) {
     selectedDay.value = day;
     showModal.value = true;
-    if (day.meals && day.meals.dishes.length>0) {
+    if (day.meals && day.meals.dishes.length > 0) {
         selectedFirstDish.value = getPlat(day.meals.dishes[0]);
         selectedSecondDish.value = getPlat(day.meals.dishes[1]);
         selectedDessertDish.value = getPlat(day.meals.dishes[2]);
@@ -798,18 +967,50 @@ function openPopover(dishType) {
     showPopover.value = true;
 }
 
+function saveMenuDay(firstDish, secondDish, thirdDish) {
+    console.log(firstDish, secondDish, thirdDish);
+    showModal.value = false;
+}
+function updateSelectedDate(event) {
+    const date = new Date(event.detail.value);
+    const day = date.getDate() < 10 ? date.getDate() : ("0" + date.getDate()).slice(-2);
+    selectedDate.value = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2);
+    daysMonthRef.value[day].$el.scrollIntoView();
+}
+
+function obtenerMes(selectedDate) {
+    const partes = selectedDate.split("-");
+    const mes = parseInt(partes[1], 10);
+    return mes;
+}
+
 const selectPlat = (plat) => {
     selectedPlat.value = plat;
     showPopover.value = false;
+
+    if (selectedDay.value) {
+        if (!selectedDay.value.meals.dishes) {
+            selectedDay.value.meals.dishes = {};
+        }
+        switch (tipoPlato.value) {
+            case 0:
+                selectedDay.value.meals.dishes[0] = plat.id;
+                selectedFirstDish.value = plat;
+                break;
+            case 1:
+                selectedDay.value.meals.dishes[1] = plat.id;
+                selectedSecondDish.value = plat;
+                break;
+            case 2:
+                selectedDay.value.meals.dishes[2] = plat.id;
+                selectedDessertDish.value = plat;
+                break;
+            default:
+                break;
+        }
+    }
 };
 
-// const filteredPlats = computed(() => {
-//     if (searchText.value) {
-//         return plats.value.filter((plat) => plat.name.toLowerCase().includes(searchText.value.toLowerCase()));
-//     } else {
-//         return plats.value;
-//     }
-// });
 const filteredPlats = computed(() => {
     return plats.value.filter((plat) => {
         const nameMatches = searchText.value ? plat.name.toLowerCase().includes(searchText.value.toLowerCase()) : true;
@@ -838,6 +1039,37 @@ const getTypeString = (type) => {
 
 onMounted(() => {
     currentYearMonth.value = getCurrentYearMonth();
+
+    const options = {
+        root: ionListMenuDays.value.$el,
+        rootMargin: "-20px 0px -100% 0px",
+        threshold: 0,
+    };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const selectedDay = entry.target.innerText;
+                console.log("Selected Day:", selectedDay);
+                const dia = selectedDay.split(" ")[0];
+                const diaFormateado = dia < 10 ? "0" + dia : dia;
+                // if (selectedDate.value.length !== 7) {
+                //     // selectedDate.value no tiene el formato YYYY-MM-DD
+                //     selectedDate.value = `${selectedDate.value}-${diaFormateado}`; // Agrega el día a selectedDate.value
+                // } else {
+                // selectedDate.value ya tiene el formato YYYY-MM-DD
+                const parts = selectedDate.value.split("-"); // Divide la fecha en partes
+                parts[2] = diaFormateado; // Actualiza el día
+                const fechaFormateada = parts.join("-"); // Une las partes nuevamente
+                console.log("Selected Date:", fechaFormateada);
+                selectedDate.value = fechaFormateada; // Actualiza selectedDate.value
+                // }
+            }
+        });
+    }, options);
+
+    Object.values(daysMonthRef.value).forEach((item) => {
+        observer.observe(item.$el);
+    });
 });
 </script>
 
@@ -906,8 +1138,152 @@ ion-popover::part(content) {
     position: absolute;
     left: 35%;
 }
-ion-modal.selectPlato {
+ion-modal.selectDish {
     --height: 60vh;
-    --width: 60vw;
+    --width: 80vw;
+}
+ion-card-content {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    .card-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+.select-dish-class {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    span {
+        font-size: 12px;
+        font-weight: normal;
+        color: var(--ion-color-secondary);
+        margin-left: 5px;
+    }
+    h2 {
+        color: black;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    div {
+        flex-grow: 1;
+    }
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        color: black;
+    }
+}
+[size="small"] {
+    height: 20px;
+    font-size: 12px;
+    margin: 2px;
+    text-wrap: nowrap;
+}
+.icon-group {
+    display: flex;
+    column-gap: 5px;
+    .circle {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        flex-grow: 0 !important;
+        justify-content: center;
+        align-items: center;
+    }
+    .circle-mobile {
+        width: 30px;
+        height: 30px;
+        ion-icon {
+            font-size: 20px;
+        }
+    }
+}
+.datetime-mobile {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--background);
+}
+.days-menu-list {
+    overflow: auto;
+    overflow-anchor: auto;
+    height: 52.6vh;
+    padding: 0;
+}
+.day-mobile-label {
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
+}
+
+ion-datetime {
+    --background: #e0e0e0;
+    --color: black;
+
+    border-radius: 16px;
+}
+ion-datetime::part(calendar-day) {
+    color: #000000;
+}
+ion-datetime::part(calendar-day):focus {
+    background-color: var(--ion-color-primary);
+    box-shadow: 0px 0px 0px 4px rgb(154 209 98 / 0.2);
+}
+ion-datetime::part(month-year-button) {
+    color: black;
+}
+ion-datetime::part(calendar-day active),
+ion-datetime::part(calendar-day active):focus {
+    background-color: var(--ion-color-secondary);
+    border-color: var(--ion-color-secondary);
+    color: #fff;
+}
+
+.mobile-datetime {
+    border: 1px solid var(--ion-color-primary);
+}
+
+@media (max-width: 768px) {
+    ion-modal.selectDish {
+        --height: 100vh;
+        --width: 100vw;
+    }
+    .select-day-cards {
+        flex-direction: column;
+        align-items: center;
+        ion-card {
+            flex-grow: 1;
+        }
+    }
+    ion-popover {
+        --width:100vw;
+        --height:100vh;
+    }
+    ion-popover::part(content) {
+    position: absolute;
+    left: 0%;
+}
+    .datetime-mobile {
+        height: 42vh;
+        position:relative
+    }
+    .newMenuButtonMobile{
+        position: absolute;
+        bottom: 6px;
+        right:10px;
+    }
+    
 }
 </style>
