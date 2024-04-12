@@ -20,6 +20,30 @@
                                     @ionBlur="checkEmailExists"
                                 ></ion-input>
                             </form-input>
+                            <!-- Nombre -->
+                            <form>
+                                <form-input :validation="v$.registration" input-name="firstname">
+                                    <ion-input
+                                        v-model="registration.firstname"
+                                        ref="firstname"
+                                        :label="$t('auth.registration.firstname')"
+                                        label-placement="floating"
+                                        class="form-input"
+                                    ></ion-input>
+                                </form-input>
+                            </form>
+                            <!-- Apellido -->
+                            <form>
+                                <form-input :validation="v$.registration" input-name="lastname">
+                                    <ion-input
+                                        v-model="registration.lastname"
+                                        ref="lastname"
+                                        :label="$t('auth.registration.lastname')"
+                                        label-placement="floating"
+                                        class="form-input"
+                                    ></ion-input>
+                                </form-input>
+                            </form>
 
                             <!-- User name -->
                             <form-input :validation="v$.registration" input-name="username">
@@ -83,6 +107,7 @@
                                     ></ion-input>
                                 </form-input>
                             </form>
+                           
                         </ion-item-group>
 
                         <form-input :validation="v$.registration" input-name="termsOfUse">
@@ -174,6 +199,8 @@ import { ref } from "vue";
 
 import FormInput from "@/components/form/FormInput.vue";
 
+import $auth from "@/services/appService/auth.js";
+
 export default {
     components: {
         IonGrid,
@@ -211,6 +238,8 @@ export default {
                 password: null,
                 confirmPassword: null,
                 termsOfUse: false,
+                firstname:null,
+                lastname:null,
             },
             countryObject: null,
             userExists: null,
@@ -226,6 +255,8 @@ export default {
         return {
             registration: {
                 username: { required, userExists: userExists(this.userExists) },
+                firstname:{required},
+                lastname:{required},
                 password: {
                     required,
                     containsUppercase,
@@ -273,16 +304,15 @@ export default {
             });
         },
         async registerFEvent() {
-            this.checkEmailExists();
-            this.checkUsernameExists();
             const isFormValid = await this.v$.$validate();
             if (isFormValid) {
                 try {
                     this.isOpenRegistering = true;
-                    const registerUserResponse = await this.$store.dispatch("auth/registerF", {
-                        email: this.registration.email,
-                        password: this.registration.password,
-                    });
+                    $auth.registerUser({...this.registration,role:1})
+                    // const registerUserResponse = await this.$store.dispatch("auth/registerF", {
+                    //     email: this.registration.email,
+                    //     password: this.registration.password,
+                    // });
                     switch (registerUserResponse) {
                         case true:
                             break;
@@ -307,13 +337,6 @@ export default {
                             this.showAlert = true;
                             throw new Error();
                     }
-                    await this.$store.dispatch("userNode/createUserNode", {
-                        username: this.registration.username,
-                        email: this.registration.email,
-                        password: this.registration.password,
-                        language: this.$store.getters["common/currentLocale"].value,
-                    });
-                    this.isOpenRegistering = false;
 
                     await this.loginFEvent(this.registration.email, this.registration.password);
                 } catch (error) {
@@ -334,24 +357,6 @@ export default {
                     email: email,
                     password: password,
                 });
-
-                await this.$store.dispatch("user/getUserByEmail", email);
-
-                const userData = this.$store.getters["user/getUserPsqlData"];
-
-                await this.$store.dispatch("userNode/userSignin", {});
-
-                const { defaultRole, defaultNodeId } = await this.$store.dispatch("user/getUser", {
-                    userId: userData.userNodeId,
-                    sessionToken: userFirebaseData.accessToken,
-                });
-                // let roleProfilePhoto= await this.getRoleProfilePhoto(defaultNodeId,userFirebaseData.accessToken)
-                await this.$store.dispatch("userNode/setUserProfile", {
-                    role: defaultRole ? this.roleConverter(defaultRole) : "user",
-                    nodeId: defaultNodeId ? defaultNodeId : userData.userNodeId,
-                    roleImg: null,
-                });
-
                 this.isOpenLoading = false;
                 this.$router.push("/feed");
             } catch (error) {
@@ -522,3 +527,4 @@ ion-badge {
     --track-background-checked: white;
 }
 </style>
+@/services/appService/auth.js
