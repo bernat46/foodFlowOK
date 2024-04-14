@@ -17,8 +17,8 @@
                                     :label="$t('auth.registration.email')"
                                     label-placement="floating"
                                     class="form-input"
-                                    @ionBlur="checkEmailExists"
-                                ></ion-input>
+                                    ></ion-input>
+                                    <!-- @ionBlur="checkEmailExists" -->
                             </form-input>
                             <!-- Nombre -->
                             <form>
@@ -53,8 +53,8 @@
                                     label-placement="floating"
                                     ref="username"
                                     class="form-input"
-                                    @ionBlur="checkUsernameExists"
-                                ></ion-input>
+                                    ></ion-input>
+                                    <!-- @ionBlur="checkUsernameExists" -->
                             </form-input>
 
                             <form>
@@ -114,7 +114,7 @@
                             <ion-item lines="none">
                                 <ion-label class="ion-text-wrap">
                                     {{ $t("auth.registration.terms_of_use_1") }}
-                                    <a :href="$t('auth.terms')" target="_blank">
+                                    <a href="" target="_blank">
                                         {{ $t("auth.registration.terms_of_use_2") }}
                                     </a>
                                 </ion-label>
@@ -179,7 +179,7 @@ import { useVuelidate } from "@vuelidate/core";
 import countryList from "@/assets/js/countries";
 
 import LanguageChanger from "@/components/settings/LanguageChanger.vue";
-// import AlertPop from "@/components/alert/Alert.vue";
+import AlertPop from "@/components/alert/AlertPop.vue";
 
 import {
     required,
@@ -220,7 +220,7 @@ export default {
         IonLoading,
         LanguageChanger,
         FormInput,
-        // AlertPop,
+        AlertPop,
     },
     setup() {
         return { v$: useVuelidate() };
