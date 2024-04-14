@@ -191,7 +191,7 @@
                                 </h2>
                                 <div class="ion-padding">
                                     <h3 class="ion-padding-bottom">Ingredients:</h3>
-                                    <ion-chip-group>
+                                    <div>
                                         <ion-chip
                                             v-for="(ingredient, index) in selectedFirstDish.ingredients"
                                             size="small"
@@ -199,10 +199,10 @@
                                         >
                                             {{ ingredient }}
                                         </ion-chip>
-                                    </ion-chip-group>
+                                    </div>
                                 </div>
                                 <div class="ion-padding">
-                                    <ion-icon-group v-if="selectedFirstDish.allergens.length > 0" class="icon-group">
+                                    <div v-if="selectedFirstDish.allergens.length > 0" class="icon-group">
                                         <div
                                             v-for="(allergen, index) in selectedFirstDish.allergens"
                                             :key="index"
@@ -215,7 +215,7 @@
                                                 alt="allergen"
                                             ></ion-icon>
                                         </div>
-                                    </ion-icon-group>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -234,7 +234,7 @@
                                 </h2>
                                 <div class="ion-padding">
                                     <h3 class="ion-padding-bottom">Ingredients:</h3>
-                                    <ion-chip-group>
+                                    <div>
                                         <ion-chip
                                             v-for="(ingredient, index) in selectedSecondDish.ingredients"
                                             size="small"
@@ -242,10 +242,10 @@
                                         >
                                             {{ ingredient }}
                                         </ion-chip>
-                                    </ion-chip-group>
+                                    </div>
                                 </div>
                                 <div class="ion-padding">
-                                    <ion-icon-group v-if="selectedSecondDish.allergens.length > 0" class="icon-group">
+                                    <div v-if="selectedSecondDish.allergens.length > 0" class="icon-group">
                                         <div
                                             v-for="(allergen, index) in selectedSecondDish.allergens"
                                             :key="index"
@@ -258,7 +258,7 @@
                                                 alt="allergen"
                                             ></ion-icon>
                                         </div>
-                                    </ion-icon-group>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -278,7 +278,7 @@
                                 </h2>
                                 <div class="ion-padding">
                                     <h3 class="ion-padding-bottom">Ingredients:</h3>
-                                    <ion-chip-group>
+                                    <div>
                                         <ion-chip
                                             v-for="(ingredient, index) in selectedDessertDish.ingredients"
                                             size="small"
@@ -286,11 +286,11 @@
                                         >
                                             {{ ingredient }}
                                         </ion-chip>
-                                    </ion-chip-group>
+                                    </div>
                                 </div>
 
                                 <div class="ion-padding">
-                                    <ion-icon-group v-if="selectedDessertDish.allergens.length > 0" class="icon-group">
+                                    <div v-if="selectedDessertDish.allergens.length > 0" class="icon-group">
                                         <div
                                             v-for="(allergen, index) in selectedDessertDish.allergens"
                                             :key="index"
@@ -303,7 +303,7 @@
                                                 alt="allergen"
                                             ></ion-icon>
                                         </div>
-                                    </ion-icon-group>
+                                    </div>
                                 </div>
                             </div>
                         </template>
