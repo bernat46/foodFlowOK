@@ -22,6 +22,11 @@ const routes = [
         component: () => import("@/views/MenuPage.vue"),
     },
     {
+        path: "/centres",
+        name: "Centres",
+        component: () => import("@/views/CentresPage.vue")
+    },
+    {
         path: "/tabs",
         component: () => import("@/views/TabsPage.vue"),
         //   meta: {

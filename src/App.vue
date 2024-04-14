@@ -50,7 +50,7 @@ import {
     IonPage
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
-import { home,restaurantOutline,personAddOutline, gridOutline } from "ionicons/icons";
+import { home,restaurantOutline,personAddOutline, gridOutline, locationOutline } from "ionicons/icons";
 
 const router = useRouter();
 
@@ -72,6 +72,11 @@ const routes = [
         path: "/menus",
         meta: { title: "Menus", icon: gridOutline },
     },
+    {
+        path: "/centres",   
+        meta: { title: "Centres", icon: locationOutline  },
+    },
+
     // Add more routes as needed
 ];
 
