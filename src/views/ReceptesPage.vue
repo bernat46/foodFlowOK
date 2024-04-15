@@ -305,6 +305,7 @@ const saveRecipe = () => {
     // Cerramos el modal
     showModal.value = false;
 };
+
 </script>
 <style lang="scss" scoped>
 .header {

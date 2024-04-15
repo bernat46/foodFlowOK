@@ -7,92 +7,206 @@
             </ion-header>
         
             <ion-content>
-            <div class="title-content">
-                <h2 class="page-title">Centres</h2>
-                <div>
-                    <ion-icon :icon="addOutline" class="icon"></ion-icon>
-                    <ion-icon :icon="trashOutline" class="icon"></ion-icon>
-                </div>   
-            </div>
-            
-            <ion-grid >
-                <!-- Example rows with center information -->
-                <ion-row class="centre-row">
-                <!-- Image column -->
-                <ion-col size-md="7" size-xs="12" class="image-col ion-no-padding">
-                    <div class="centre-img">
-                    <img src="@/assets/images/safa.png" alt="Center Image" />
+                <div class="body">
+                    <div class="title-content">
+                        <h2 class="page-title">Centres</h2>
+                        <div>
+                            <ion-icon :icon="addOutline" class="icon" id="open-modal"></ion-icon>
+                            <ion-icon :icon="trashOutline" class="icon"></ion-icon>
+                        </div>   
                     </div>
-                </ion-col>
-                <!-- Info column -->
-                <ion-col size-md="5" size-xs="12" class="info-col ion-no-padding">
-                    <div class="centre-info">
-                        <div class="title">
-                            <h2>Barcelona</h2>
-                            <div class="right-content">
-                            <p>150</p>
-                            <ion-icon :icon="peopleOutline" class="icon"></ion-icon>
+                    
+                    <ion-grid >
+                        <!-- Example rows with center information -->
+                        <ion-row class="centre-row">
+                        <!-- Image column -->
+                        <ion-col size-md="7" size-xs="12" class="image-col ion-no-padding">
+                            <div class="centre-img">
+                            <img src="@/assets/images/safa.png" alt="Center Image" />
                             </div>
-                        </div>                      
-                        
-                        <hr>
-                        <p>
-                            Escola pia Barcelona
-                            <br>
-                            Carrer aragò, 1234
-                        </p>
-                        <h5><strong>Contacte</strong></h5>
-                        <p class="pgf-2">
-                            Joaquim Quim
-                            <br>
-                            987654321
-                            <br>
-                            escolapia@gmail.com
-                            <br>
-                        </p>
-                    </div>
-                </ion-col>
-                </ion-row>
-
-                <ion-row class="centre-row">
-                    <!-- Image column -->
-                    <ion-col size-md="7" size-xs="12" class="image-col ion-no-padding">
-                        <div class="centre-img">
-                        <img src="@/assets/images/escola-pia.jpg" alt="Center Image" />
-                        </div>
-                    </ion-col>
-                    <!-- Info column -->
-                    <ion-col size-md="5" size-xs="12" class="info-col ion-no-padding">
-                        <div class="centre-info">
-                            <div class="title">
-                                <h2>Barcelona</h2>
-                                <div class="right-content">
-                                <p>150</p>
-                                <ion-icon :icon="peopleOutline" class="icon"></ion-icon>
+                        </ion-col>
+                        <!-- Info column -->
+                        <ion-col size-md="5" size-xs="12" class="info-col ion-no-padding">
+                            <div class="centre-info">
+                                <div class="title">
+                                    <h2>Barcelona</h2>
+                                    <div class="right-content">
+                                    <p>150</p>
+                                    <ion-icon :icon="peopleOutline" class="icon"></ion-icon>
+                                    </div>
+                                </div>                      
+                                
+                                <hr>
+                                <p>
+                                    Escola pia Barcelona
+                                    <br>
+                                    Carrer aragò, 1234
+                                </p>
+                                <h5><strong>Contacte</strong></h5>
+                                <p class="pgf-2">
+                                    Joaquim Quim
+                                    <br>
+                                    987654321
+                                    <br>
+                                    escolapia@gmail.com
+                                    <br>
+                                </p>
+                            </div>
+                        </ion-col>
+                        </ion-row>
+        
+                        <ion-row class="centre-row" id="open-modal-modify">
+                            <!-- Image column -->
+                            <ion-col size-md="7" size-xs="12" class="image-col ion-no-padding">
+                                <div class="centre-img">
+                                <img src="@/assets/images/escola-pia.jpg" alt="Center Image" />
                                 </div>
-                            </div>                      
-                            
-                            <hr>
-                            <p>
-                                Escola pia Barcelona
-                                <br>
-                                Carrer aragò, 1234
-                            </p>
-                            <h5><strong>Contacte</strong></h5>
-                            <p class="pgf-2">
-                                Joaquim Quim
-                                <br>
-                                987654321
-                                <br>
-                                escolapia@gmail.com
-                                <br>
-                            </p>
-                        </div>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+                            </ion-col>
+                            <!-- Info column -->
+                            <ion-col size-md="5" size-xs="12" class="info-col ion-no-padding">
+                                <div class="centre-info">
+                                    <div class="title">
+                                        <h2>Barcelona</h2>
+                                        <div class="right-content">
+                                        <p>150</p>
+                                        <ion-icon :icon="peopleOutline" class="icon"></ion-icon>
+                                        </div>
+                                    </div>                      
+                                    
+                                    <hr>
+                                    <p>
+                                        Escola pia Barcelona
+                                        <br>
+                                        Carrer aragò, 1234
+                                    </p>
+                                    <h5><strong>Contacte</strong></h5>
+                                    <p class="pgf-2">
+                                        Joaquim Quim
+                                        <br>
+                                        987654321
+                                        <br>
+                                        escolapia@gmail.com
+                                        <br>
+                                    </p>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </div>
+
+                <ion-modal class="modal-alta"  ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
+                    <ion-header>
+                      <ion-toolbar>
+                        <ion-buttons slot="start">
+                          <ion-button @click="cancel()">Tancar</ion-button>
+                        </ion-buttons>
+                        <ion-title>Alta Centre</ion-title>
+                        <ion-buttons slot="end">
+                          <ion-button :strong="true" @click="confirm()">Donar d'alta</ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-header>
+                    <ion-content class="ion-padding">
+                        <h5>Dades centre</h5>
+                        <ion-input
+                        label="Nom Centre (únic)"
+                        label-placement="stacked"
+                        ref="input"
+                        type="text"
+                        placeholder="Barcelona I"
+                        ></ion-input>
+                        <ion-input
+                        label="Direcció"
+                        label-placement="stacked"
+                        ref="input"
+                        type="text"
+                        placeholder="C/ Aragò 24"
+                        ></ion-input>
+                        <ion-input
+                        label="Imatge"
+                        label-placement="stacked"
+                        ref="input"
+                        type="img"
+                        ></ion-input>
+                        <h5>Dades persona contacte</h5>
+                        <ion-input
+                        label="Nom"
+                        label-placement="stacked"
+                        ref="input"
+                        type="text"
+                        ></ion-input>
+                        <ion-input
+                        label="Telèfon"
+                        label-placement="stacked"
+                        ref="input"
+                        type="tel"
+                        ></ion-input>
+                        <ion-input
+                        label="Email"
+                        label-placement="stacked"
+                        ref="input"
+                        type="email"
+                        ></ion-input>
+                    </ion-content>
+                </ion-modal>
+
+                <ion-modal class="modal-alta"  ref="modal" trigger="open-modal-modify" @willDismiss="onWillDismiss">
+                    <ion-header>
+                      <ion-toolbar>
+                        <ion-buttons slot="start">
+                          <ion-button @click="cancel()">Tancar</ion-button>
+                        </ion-buttons>
+                        <ion-title>Editar Centre</ion-title>
+                        <ion-buttons slot="end">
+                          <ion-button :strong="true" @click="confirm()">Donar d'alta</ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                    </ion-header>
+                    <ion-content class="ion-padding">
+                        <h5>Dades centre</h5>
+                        <ion-input
+                        label="Nom Centre (únic)"
+                        label-placement="stacked"
+                        ref="input"
+                        type="text"
+                        placeholder="Barcelona I"
+                        ></ion-input>
+                        <ion-input
+                        label="Direcció"
+                        label-placement="stacked"
+                        ref="input"
+                        type="text"
+                        placeholder="C/ Aragò 24"
+                        ></ion-input>
+                        <ion-input
+                        label="Imatge"
+                        label-placement="stacked"
+                        ref="input"
+                        type="img"
+                        ></ion-input>
+                        <h5>Dades persona contacte</h5>
+                        <ion-input
+                        label="Nom"
+                        label-placement="stacked"
+                        ref="input"
+                        type="text"
+                        ></ion-input>
+                        <ion-input
+                        label="Telèfon"
+                        label-placement="stacked"
+                        ref="input"
+                        type="tel"
+                        ></ion-input>
+                        <ion-input
+                        label="Email"
+                        label-placement="stacked"
+                        ref="input"
+                        type="email"
+                        ></ion-input>
+                    </ion-content>
+                </ion-modal>
             </ion-content>
-        </ion-page>
+        </ion-page>    
     </template>
     <script setup>
     import {
@@ -105,11 +219,26 @@
         IonGrid,
         IonCol,
         IonIcon,
+        IonModal,
+        IonButton,
+        IonInput,
     } from "@ionic/vue";
+
 import {  peopleOutline, trashOutline, addOutline } from "ionicons/icons";
+import { ref } from 'vue';
+
+const modal = ref();
+const input = ref();
+
+const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
     </script>
     <style lang="scss" scoped>
+    .body{
+        width: 1400px;
+        margin: auto;
+    }
+
     .title-content{
         display: flex;
         justify-content: space-between;
@@ -126,6 +255,22 @@ import {  peopleOutline, trashOutline, addOutline } from "ionicons/icons";
         margin-top: 20px;
         margin-bottom: 0px;
     }
+
+    .modal-alta ion-input{
+        border-bottom: 0.1px solid rgb(44, 138, 0, 0.77)
+    }
+
+    .modal-alta ion-title{
+        text-align: center;
+
+    }
+
+    .centre-img:hover,
+    .centre-info:hover,
+    #open-modal:hover{
+        cursor: pointer;
+    }
+
     .centre-row {
         padding: 20px 50px;
     }
