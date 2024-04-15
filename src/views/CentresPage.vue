@@ -2,7 +2,7 @@
     <ion-page>
         <ion-header>
         <ion-toolbar>
-            <ion-title>Centers</ion-title>
+            <ion-title>Centres</ion-title>
         </ion-toolbar>
         </ion-header>
     
