@@ -27,29 +27,8 @@ const routes = [
         component: () => import("@/views/CentresPage.vue")
     },
     {
-        path: "/tabs",
-        component: () => import("@/views/TabsPage.vue"),
-        //   meta: {
-        //     requiresAuth: true,
-        // },
-    },
-    {
         path: "/receptes",
         component: () => import("@/views/ReceptesPage.vue"),
-        //   meta: {
-        //     requiresAuth: true,
-        // },
-    },
-    {
-        path: "/tabs/tab2",
-        component: () => import("@/views/Tab2Page.vue"),
-        //   meta: {
-        //     requiresAuth: true,
-        // },
-    },
-    {
-        path: "/tabs/tab3",
-        component: () => import("@/views/Tab3Page.vue"),
         //   meta: {
         //     requiresAuth: true,
         // },

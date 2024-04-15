@@ -133,7 +133,7 @@
                         </template>
                     </ion-grid>
                 </template>
-                <div class="div-mobile">
+                <div v-else class="div-mobile">
                     <div class="datetime-mobile ion-padding-vertical">
                         <ion-datetime
                             v-model="selectedDate"
@@ -1311,36 +1311,39 @@ const getTypeString = (type) => {
 onMounted(() => {
     currentYearMonth.value = getCurrentYearMonth();
 
-    const options = {
-        root: ionListMenuDays.value.$el,
-        rootMargin: "-20px 0px -100% 0px",
-        threshold: 0,
-    };
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                const selectedDay = entry.target.innerText;
-                console.log("Selected Day:", selectedDay);
-                const dia = selectedDay.split(" ")[0];
-                const diaFormateado = dia < 10 ? "0" + dia : dia;
-                // if (selectedDate.value.length !== 7) {
-                //     // selectedDate.value no tiene el formato YYYY-MM-DD
-                //     selectedDate.value = `${selectedDate.value}-${diaFormateado}`; // Agrega el día a selectedDate.value
-                // } else {
-                // selectedDate.value ya tiene el formato YYYY-MM-DD
-                const parts = selectedDate.value.split("-"); // Divide la fecha en partes
-                parts[2] = diaFormateado; // Actualiza el día
-                const fechaFormateada = parts.join("-"); // Une las partes nuevamente
-                console.log("Selected Date:", fechaFormateada);
-                selectedDate.value = fechaFormateada; // Actualiza selectedDate.value
-                // }
-            }
+    if(isMobile.value){
+        const options = {
+            root: ionListMenuDays.value.$el,
+            rootMargin: "-20px 0px -100% 0px",
+            threshold: 0,
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const selectedDay = entry.target.innerText;
+                    console.log("Selected Day:", selectedDay);
+                    const dia = selectedDay.split(" ")[0];
+                    const diaFormateado = dia < 10 ? "0" + dia : dia;
+                    // if (selectedDate.value.length !== 7) {
+                    //     // selectedDate.value no tiene el formato YYYY-MM-DD
+                    //     selectedDate.value = `${selectedDate.value}-${diaFormateado}`; // Agrega el día a selectedDate.value
+                    // } else {
+                    // selectedDate.value ya tiene el formato YYYY-MM-DD
+                    const parts = selectedDate.value.split("-"); // Divide la fecha en partes
+                    parts[2] = diaFormateado; // Actualiza el día
+                    const fechaFormateada = parts.join("-"); // Une las partes nuevamente
+                    console.log("Selected Date:", fechaFormateada);
+                    selectedDate.value = fechaFormateada; // Actualiza selectedDate.value
+                    // }
+                }
+            });
+        }, options);
+    
+        Object.values(daysMonthRef.value).forEach((item) => {
+            observer.observe(item.$el);
         });
-    }, options);
-
-    Object.values(daysMonthRef.value).forEach((item) => {
-        observer.observe(item.$el);
-    });
+        
+    }
 });
 </script>
 
