@@ -180,6 +180,8 @@ import {
 import { ref, computed } from "vue";
 import { pencilOutline, addOutline, close, trashOutline } from "ionicons/icons";
 
+import $recipes from "@/services/appService/recipes.js";
+
 const searchText = ref("");
 const showModal = ref(false);
 const currentRecipe = ref(null);
@@ -297,10 +299,11 @@ const deleteIngredient = (ingredientToDelete) => {
         currentRecipe.value.ingredients.splice(indexToDelete, 1);
     }
 };
-const saveRecipe = () => {
+const saveRecipe = async() => {
     if (!currentRecipe.value.id) {
         // Si la receta no tiene ID, la añadimos al array recipes
         recipes.value.push(currentRecipe.value);
+        await $recipes.postRecipe()
     }
     // Cerramos el modal
     showModal.value = false;

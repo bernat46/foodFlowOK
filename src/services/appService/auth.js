@@ -1,7 +1,7 @@
 import { appService } from "../axiosConfig.js";
 export default {
     async registerUser(newUser) {
-        const url = "user/register";
+        const url = "users/register";
         try {
             const response = await appService.post(url, newUser);
             return response.data;
@@ -10,7 +10,7 @@ export default {
         }
     },
     async login(email, password) {
-        const url = "user/register";
+        const url = "users/login";
         try {
             const response = await appService.post(url, {
                 email: email,
