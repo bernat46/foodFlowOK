@@ -33,6 +33,13 @@ const routes = [
         //     requiresAuth: true,
         // },
     },
+    {
+        path: "/alergenos",
+        component: () => import("@/views/AlergensPage.vue"),
+        //   meta: {
+        //     requiresAuth: true,
+        // },
+    },
 ];
 
 const router = createRouter({

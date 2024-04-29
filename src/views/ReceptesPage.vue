@@ -50,10 +50,9 @@
             </ion-content>
         </ion-page>
         <ion-modal
-            v-if="showModal"
             :is-open="showModal"
             :initial-breakpoint="1"
-            :breakpoints="[0, 1]">
+            :breakpoints="[0, 1]" @didDismiss="showModal = false">
             <ion-header>
                 <ion-toolbar color="primary">
                     <ion-title color="white">{{
