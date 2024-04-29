@@ -176,7 +176,7 @@ import {
     IonInput,
     IonText,
 } from "@ionic/vue";
-import { ref, computed } from "vue";
+import { ref, computed ,onMounted} from "vue";
 import { pencilOutline, addOutline, close, trashOutline } from "ionicons/icons";
 
 import $recipes from "@/services/appService/recipes.js";
@@ -300,13 +300,18 @@ const deleteIngredient = (ingredientToDelete) => {
 };
 const saveRecipe = async() => {
     if (!currentRecipe.value.id) {
-        // Si la receta no tiene ID, la añadimos al array recipes
-        recipes.value.push(currentRecipe.value);
-        await $recipes.postRecipe()
+        // recipes.value.push(currentRecipe.value);
+        await $recipes.postRecipe(currentRecipe.value)
+    }else{
+        await $recipes.putRecipe(currentRecipe.value)
     }
     // Cerramos el modal
     showModal.value = false;
 };
+
+onMounted(async() => {
+    recipes.value = await $recipes.findAll();
+});
 
 </script>
 <style lang="scss" scoped>
