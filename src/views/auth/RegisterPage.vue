@@ -308,7 +308,8 @@ export default {
             if (isFormValid) {
                 try {
                     this.isOpenRegistering = true;
-                    $auth.registerUser({...this.registration,role:1})
+                   await  $auth.registerUser({...this.registration,role:1})
+                    await  $auth.login(this.registration.email,this.registration.password)
                     // const registerUserResponse = await this.$store.dispatch("auth/registerF", {
                     //     email: this.registration.email,
                     //     password: this.registration.password,

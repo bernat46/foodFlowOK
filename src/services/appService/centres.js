@@ -80,7 +80,7 @@ export default {
     async deleteCentre(id) {
         const url = "centres/create";
         try {
-            const response = await appService.put(url, {
+            const response = await appService.delete(url, {
                 params: { id: id },
             });
             return response.data;
