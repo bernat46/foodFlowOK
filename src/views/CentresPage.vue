@@ -228,7 +228,7 @@ const newItem = ref(modalState.value.alta.newItem);
 
 <style lang="scss" scoped>
 .body{
-    width: 1200px;
+    width: 90%;
     margin: auto;
 }
 

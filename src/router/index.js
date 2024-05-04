@@ -28,14 +28,11 @@ const routes = [
     },
     {
         path: "/receptes",
-        component: () => import("@/views/ReceptesPage.vue"),
+        component: () => import("@/views/ReceptesPage.vue")
     },
     {
         path: "/inici",
-        component: () => import("@/views/iniciPage.vue"),
-        meta: {
-             isMenuDisabled: true,
-        }
+        component: () => import("@/views/iniciPage.vue")
     },
     
 ];
