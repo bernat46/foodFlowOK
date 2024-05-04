@@ -2,7 +2,7 @@
     <ion-page>
         <ion-header>
         <ion-toolbar>
-            <ion-title>Centers</ion-title>
+            <ion-title>Centres</ion-title>
         </ion-toolbar>
         </ion-header>
     
@@ -228,7 +228,7 @@ const newItem = ref(modalState.value.alta.newItem);
 
 <style lang="scss" scoped>
 .body{
-    width: 1200px;
+    width: 90%;
     margin: auto;
 }
 

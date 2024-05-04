@@ -28,11 +28,8 @@ const routes = [
     },
     {
         path: "/receptes",
-        component: () => import("@/views/ReceptesPage.vue"),
-        //   meta: {
-        //     requiresAuth: true,
-        // },
-    },
+        component: () => import("@/views/ReceptesPage.vue")
+    }
 ];
 
 const router = createRouter({

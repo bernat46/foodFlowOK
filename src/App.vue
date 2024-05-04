@@ -1,87 +1,106 @@
-<template>
-    <ion-app>
-        <ion-menu content-id="main-content">
-            <ion-header>
-                <ion-toolbar>
-                    <ion-title>Menu Content</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <ion-content class="ion-padding">
-                <ion-item
-                    v-for="route in routes"
-                    lines="none"
-                    color="black"
-                    :key="route.path"
-                    @click="navigate(route.path)"
-                >
-                    <ion-icon :icon="route.meta.icon" slot="start"></ion-icon>
-                    <ion-label>{{ route.meta.title }}</ion-label>
-                </ion-item>
-            </ion-content>
-        </ion-menu>
-        <ion-page id="main-content">
-            <ion-header>
-                <ion-toolbar>
-                    <ion-buttons slot="start">
-                        <ion-menu-button></ion-menu-button>
-                    </ion-buttons>
-                    <ion-title>Menu</ion-title>
-                </ion-toolbar>
-            </ion-header>
-            <ion-router-outlet id="main-content"  :key="$route.fullPath" /> 
-          </ion-page>
-        </ion-app>
-</template>
+    <template>
+        <ion-app>
+            <ion-menu content-id="main-content">
+                <ion-header>
+                    <ion-toolbar>
+                        <router-link to="/inici">
+                            <img src="@/assets/images/logo.png" />
+                        </router-link>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content class="ion-padding">
+                    <ion-item
+                        v-for="route in routes"
+                        lines="none"
+                        color="black"
+                        :key="route.path"
+                        @click="navigate(route.path)"
+                    >
+                        <ion-icon :icon="route.meta.icon" slot="start"></ion-icon>
+                        <ion-label>{{ route.meta.title }}</ion-label>
+                    </ion-item>
+                </ion-content>
+            </ion-menu>
+            <ion-page id="main-content">
+                <ion-header v-if="showMenu">
+                    <ion-toolbar>
+                        <ion-buttons slot="start">
+                            <ion-menu-button></ion-menu-button>
+                        </ion-buttons>
+                        <ion-title>Menu</ion-title>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-router-outlet id="main-content"  :key="$route.fullPath" /> 
+            </ion-page>
+            </ion-app>
+    </template>
 
-<script setup>
-import {
-    IonApp,
-    IonContent,
-    IonHeader,
-    IonMenu,
-    IonTitle,
-    IonToolbar,
-    IonItem,
-    IonIcon,
-    IonLabel,
-    IonRouterOutlet,
-    IonMenuButton,
-    IonButtons,
-    IonPage
-} from "@ionic/vue";
-import { useRouter } from "vue-router";
-import { home,restaurantOutline,personAddOutline, gridOutline, locationOutline } from "ionicons/icons";
+    <script setup>
+    import {
+        IonApp,
+        IonContent,
+        IonHeader,
+        IonMenu,
+        IonTitle,
+        IonToolbar,
+        IonItem,
+        IonIcon,
+        IonLabel,
+        IonRouterOutlet,
+        IonMenuButton,
+        IonButtons,
+        IonPage
+    } from "@ionic/vue";
+    import { useRouter } from "vue-router";
+    import { home,restaurantOutline,personAddOutline, gridOutline, locationOutline } from "ionicons/icons";
+    import { computed } from 'vue';
+    const router = useRouter();
 
-const router = useRouter();
+    // Define the routes and their metadata
+    const routes = [
+        { 
+            path: '/inici',
+            meta: { title: 'Inici', icon: home } 
+        },
+        {
+            path: "/login",
+            meta: { title: "Login", icon: home },
+        },
+        {
+            path: "/register",
+            meta: { title: "Register", icon: personAddOutline },
+        },
+        {
+            path: "/receptes",
+            meta: { title: "Receptes", icon: restaurantOutline },
+        },
+        {
+            path: "/menus",
+            meta: { title: "Menus", icon: gridOutline },
+        },
+        {
+            path: "/centres",   
+            meta: { title: "Centres", icon: locationOutline  },
+        }
+        // Add more routes as needed
+    ];
 
-// Define the routes and their metadata
-const routes = [
-    {
-        path: "/login",
-        meta: { title: "Login", icon: home },
-    },
-    {
-        path: "/register",
-        meta: { title: "Register", icon: personAddOutline },
-    },
-    {
-        path: "/receptes",
-        meta: { title: "Receptes", icon: restaurantOutline },
-    },
-    {
-        path: "/menus",
-        meta: { title: "Menus", icon: gridOutline },
-    },
-    {
-        path: "/centres",   
-        meta: { title: "Centres", icon: locationOutline  },
-    },
+    const navigate = (path) => {
+        router.push(path);
+    };
 
-    // Add more routes as needed
-];
+    const hideMenuButton = ['/inici','/login','/register']; // Define routes where menu button should be hidden
+    const showMenu = computed(() => {
+        const currentPath = router.currentRoute.value.path;
+        return !hideMenuButton.includes(currentPath);
+    });
+    </script>
 
-const navigate = (path) => {
-    router.push(path);
-};
-
-</script>
+    <style lang="scss" scoped>
+        ion-toolbar {
+            text-align: center;
+        }
+        ion-toolbar img{
+            width: 75%;
+        }
+    </style>
