@@ -6,6 +6,7 @@ export default {
     cantidad: "Quantitat",
     unidad: "Unitat",
     buscar: "Buscar",
+    imagen: "image",
     mesos: {
         1: "Gener",
         2: "Febrer",

@@ -33,7 +33,17 @@ const routes = [
     {
         path: "/inici",
         component: () => import("@/views/iniciPage.vue")
+    },
+    {
+        path: "/proveidors",
+        component: () => import("@/views/ProveidorsPage.vue")
+    },
+    {
+        path: "/stocks",
+        component: () => import("@/views/StocksPage.vue")
     }
+
+
 ];
 
 const router = createRouter({

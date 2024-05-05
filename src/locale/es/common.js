@@ -6,6 +6,7 @@ export default {
     cantidad:"Cantidad",
     unidad:"Unidad",
     buscar:"Buscar",
+    imagen:"Imagen",
     mesos:{
         1: "Enero",
         2: "Febrero",
