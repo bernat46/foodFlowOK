@@ -9,83 +9,104 @@
                     <div class="div-registration-form">
                         <ion-item-group class="register-user-data-group">
                             <!-- Email -->
-                            <form-input :validation="v$.registration" input-name="email">
+                            <form-input
+                                :validation="v$.registration"
+                                input-name="email">
                                 <ion-input
                                     v-model.trim="registration.email"
                                     type="email"
                                     ref="email"
                                     :label="$t('auth.registration.email')"
                                     label-placement="floating"
-                                    class="form-input"
-                                    ></ion-input>
-                                    <!-- @ionBlur="checkEmailExists" -->
+                                    class="form-input"></ion-input>
+                                <!-- @ionBlur="checkEmailExists" -->
                             </form-input>
                             <!-- Nombre -->
                             <form>
-                                <form-input :validation="v$.registration" input-name="firstname">
+                                <form-input
+                                    :validation="v$.registration"
+                                    input-name="firstname">
                                     <ion-input
                                         v-model="registration.firstname"
                                         ref="firstname"
-                                        :label="$t('auth.registration.firstname')"
+                                        :label="
+                                            $t('auth.registration.firstname')
+                                        "
                                         label-placement="floating"
-                                        class="form-input"
-                                    ></ion-input>
+                                        class="form-input"></ion-input>
                                 </form-input>
                             </form>
                             <!-- Apellido -->
                             <form>
-                                <form-input :validation="v$.registration" input-name="lastname">
+                                <form-input
+                                    :validation="v$.registration"
+                                    input-name="lastname">
                                     <ion-input
                                         v-model="registration.lastname"
                                         ref="lastname"
-                                        :label="$t('auth.registration.lastname')"
+                                        :label="
+                                            $t('auth.registration.lastname')
+                                        "
                                         label-placement="floating"
-                                        class="form-input"
-                                    ></ion-input>
+                                        class="form-input"></ion-input>
                                 </form-input>
                             </form>
 
                             <!-- User name -->
-                            <form-input :validation="v$.registration" input-name="username">
+                            <form-input
+                                :validation="v$.registration"
+                                input-name="username">
                                 <ion-input
                                     v-model="registration.username"
                                     :label="$t('auth.registration.username')"
                                     label-placement="floating"
                                     ref="username"
-                                    class="form-input"
-                                    ></ion-input>
-                                    <!-- @ionBlur="checkUsernameExists" -->
+                                    class="form-input"></ion-input>
+                                <!-- @ionBlur="checkUsernameExists" -->
                             </form-input>
 
                             <form>
                                 <div class="privateChip">
-                                    <ion-badge id="private-chip" mode="ios" @click="openPopover('password')"
+                                    <ion-badge
+                                        id="private-chip"
+                                        mode="ios"
+                                        @click="openPopover('password')"
                                         >?</ion-badge
                                     >
-                                    <form-input :validation="v$.registration" input-name="password">
+                                    <form-input
+                                        :validation="v$.registration"
+                                        input-name="password">
                                         <div class="password-input-container">
                                             <ion-input
-                                                :type="visible ? 'text' : 'password'"
+                                                :type="
+                                                    visible
+                                                        ? 'text'
+                                                        : 'password'
+                                                "
                                                 v-model="registration.password"
                                                 ref="password"
-                                                :label="$t('auth.option_password.password')"
+                                                :label="
+                                                    $t(
+                                                        'auth.option_password.password'
+                                                    )
+                                                "
                                                 label-placement="floating"
                                                 @change="
                                                     visible
-                                                        ? (registration.confirmPassword = registration.password)
+                                                        ? (registration.confirmPassword =
+                                                              registration.password)
                                                         : null
                                                 "
-                                                class="form-input"
-                                            ></ion-input>
+                                                class="form-input"></ion-input>
                                             <ion-icon
                                                 style="width: 20px"
                                                 class="password-toggle-icon"
                                                 :icon="visible ? eye : eyeOff"
                                                 @click="
                                                     visible = !visible;
-                                                    registration.confirmPassword = registration.password;
-                                                "
-                                            ></ion-icon>
+                                                    registration.confirmPassword =
+                                                        registration.password;
+                                                "></ion-icon>
                                         </div>
                                     </form-input>
                                 </div>
@@ -96,26 +117,37 @@
                                 }}</ion-content>
                             </ion-popover>
                             <form>
-                                <form-input v-if="!visible" :validation="v$.registration" input-name="confirmPassword">
+                                <form-input
+                                    v-if="!visible"
+                                    :validation="v$.registration"
+                                    input-name="confirmPassword">
                                     <ion-input
                                         v-model="registration.confirmPassword"
                                         ref="confirmPassword"
-                                        :label="$t('auth.option_password.confirmPassword')"
+                                        :label="
+                                            $t(
+                                                'auth.option_password.confirmPassword'
+                                            )
+                                        "
                                         label-placement="floating"
                                         type="password"
-                                        class="form-input"
-                                    ></ion-input>
+                                        class="form-input"></ion-input>
                                 </form-input>
                             </form>
-                           
                         </ion-item-group>
 
-                        <form-input :validation="v$.registration" input-name="termsOfUse">
+                        <form-input
+                            :validation="v$.registration"
+                            input-name="termsOfUse">
                             <ion-item lines="none">
                                 <ion-label class="ion-text-wrap">
                                     {{ $t("auth.registration.terms_of_use_1") }}
                                     <a href="" target="_blank">
-                                        {{ $t("auth.registration.terms_of_use_2") }}
+                                        {{
+                                            $t(
+                                                "auth.registration.terms_of_use_2"
+                                            )
+                                        }}
                                     </a>
                                 </ion-label>
                                 <ion-toggle
@@ -123,8 +155,7 @@
                                     class="toggle-temsOfUse"
                                     v-model="registration.termsOfUse"
                                     color="secondary"
-                                    aria-label="Terms of service"
-                                ></ion-toggle>
+                                    aria-label="Terms of service"></ion-toggle>
                             </ion-item>
                         </form-input>
 
@@ -132,8 +163,7 @@
                             color="primary"
                             expand="block"
                             @click="registerFEvent()"
-                            :disabled="isOpenRegistering"
-                        >
+                            :disabled="isOpenRegistering">
                             {{ $t("auth.options.register") }}
                         </ion-button>
                     </div>
@@ -143,16 +173,21 @@
         <!-- @click="countrySelectionChanged($event)" -->
         <!-- @language-changed="updateCountry()" -->
         <language-changer :is-floating-button="true" />
-        <ion-loading :message="$t('auth.options.logging_in')" :is-open="isOpenLoading"> </ion-loading>
-        <ion-loading :message="$t('auth.options.registering')" :is-open="isOpenRegistering"> </ion-loading>
+        <ion-loading
+            :message="$t('auth.options.logging_in')"
+            :is-open="isOpenLoading">
+        </ion-loading>
+        <ion-loading
+            :message="$t('auth.options.registering')"
+            :is-open="isOpenRegistering">
+        </ion-loading>
 
         <alert-pop
             :is-open="showAlert"
             :headerText="headerText"
             :alertButtons="alertButtons"
             @dismiss="toggleAlert"
-            :type="'error'"
-        />
+            :type="'error'" />
     </ion-page>
 </template>
 
@@ -192,7 +227,6 @@ import {
     minLength,
     sameAs,
     userExists,
-    emailExists,
 } from "@/utils/i18n-validators";
 import { eye, eyeOff } from "ionicons/icons";
 import { ref } from "vue";
@@ -238,8 +272,8 @@ export default {
                 password: null,
                 confirmPassword: null,
                 termsOfUse: false,
-                firstname:null,
-                lastname:null,
+                firstname: null,
+                lastname: null,
             },
             countryObject: null,
             userExists: null,
@@ -255,8 +289,8 @@ export default {
         return {
             registration: {
                 username: { required, userExists: userExists(this.userExists) },
-                firstname:{required},
-                lastname:{required},
+                firstname: { required },
+                lastname: { required },
                 password: {
                     required,
                     containsUppercase,
@@ -277,7 +311,6 @@ export default {
                 email: {
                     required,
                     invalidEmail,
-                    emailExists: emailExists(this.emailExists),
                 },
                 // termsOfUse: { required },
                 termsOfUse: {
@@ -308,42 +341,34 @@ export default {
             if (isFormValid) {
                 try {
                     this.isOpenRegistering = true;
-                   await  $auth.registerUser({...this.registration,role:1})
-                    await  $auth.login(this.registration.email,this.registration.password)
-                    // const registerUserResponse = await this.$store.dispatch("auth/registerF", {
-                    //     email: this.registration.email,
-                    //     password: this.registration.password,
-                    // });
-                    switch (registerUserResponse) {
-                        case true:
-                            break;
-                        case "email_already_in_use":
-                            this.headerText = this.$t("auth.option_password.error.email_already_in_use");
-                            this.showAlert = true;
-                            throw new Error();
-                        case "invalid_email":
-                            this.headerText = this.$t("auth.option_password.error.invalid_email");
-                            this.showAlert = true;
-                            throw new Error();
-                        case "operation-not-allowed":
-                            this.headerText = this.$t("auth.option_password.error.operation_not_allowed");
-                            this.showAlert = true;
-                            throw new Error();
-                        case "weak-password":
-                            this.headerText = this.$t("auth.option_password.error.weak_password");
-                            this.showAlert = true;
-                            throw new Error();
-                        default:
-                            this.headerText = this.$t("auth.option_password.error.something_wrong");
-                            this.showAlert = true;
-                            throw new Error();
+                    await $auth.registerUser({ ...this.registration, role: 1 });
+                    const registerUserResponse = await $auth.login(
+                        this.registration.email,
+                        this.registration.password
+                    );
+                    if (registerUserResponse.token) {
+                        //Guardem el token a la store
+                        this.$store.dispatch(
+                            "common/setUserToken",
+                            loginUserResponse.token
+                        );
+                        // Si existeix un token, vol dir que la sessió s'ha iniciat correctament
+                        this.$router.push("/centres");
+                        this.isOpenRegistering = false;
+                    } else {
+                        // Si no hi ha un token, mostra un missatge d'error
+                        this.headerText = this.$t(
+                            "auth.option_password.error.something_wrong"
+                        );
+                        this.showAlert = true;
+                        throw new Error();
                     }
-
-                    await this.loginFEvent(this.registration.email, this.registration.password);
                 } catch (error) {
                     this.isOpenRegistering = false;
                     this.loginError = true;
-                    this.headerText = this.$t("auth.option_password.error.something_wrong");
+                    this.headerText = this.$t(
+                        "auth.option_password.error.something_wrong"
+                    );
                     this.showAlert = true;
                 }
             }
@@ -351,38 +376,6 @@ export default {
             const errorInputName = this.v$.$errors[0].$property;
             this.$refs[errorInputName].$el.setFocus();
         },
-        async loginEvent(email, password) {
-            try {
-                this.isOpenLoading = true;
-                await this.$store.dispatch("auth/loginF", {
-                    email: email,
-                    password: password,
-                });
-                this.isOpenLoading = false;
-                this.$router.push("/feed");
-            } catch (error) {
-                this.isOpenLoading = false;
-                this.loginError = true;
-                this.headerText = this.$t("auth.option_password.error.something_wrong");
-                this.showAlert = true;
-            }
-        },
-        // async checkUsernameExists() {
-        //     try {
-        //         let usernameExists = await this.$store.dispatch("user/checkUsername", this.registration.username);
-        //         this.userExists = Boolean(usernameExists);
-        //     } catch (error) {
-        //         this.userExists = false;
-        //     }
-        // },
-        // async checkEmailExists() {
-        //     try {
-        //         let user = await this.$store.dispatch("user/getUserByEmail", this.registration.email);
-        //         this.emailExists = Boolean(user);
-        //     } catch (error) {
-        //         this.emailExists = false;
-        //     }
-        // },
     },
     ionViewDidLeave() {
         this.registration = {

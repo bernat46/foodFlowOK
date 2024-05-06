@@ -159,34 +159,23 @@ export default {
                         this.password
                     );
 
-                    switch (loginUserResponse) {
-                        case true:
-                            break;
-                        case "user_not_found":
-                            this.textAlert = this.$t(
-                                "auth.option_password.error.user_not_found"
-                            );
-                            break;
-                        case "invalid_email":
-                            this.textAlert = this.$t(
-                                "auth.option_password.error.invalid_email"
-                            );
-                            break;
-                        case "wrong_password":
-                            this.textAlert = this.$t(
-                                "auth.option_password.error.wrong_password"
-                            );
-                            break;
-                        case "invalid_credentials":
-                            this.textAlert = this.$t(
-                                "auth.option_password.error.invalid_credentials"
-                            );
-                            break;
-                        default:
-                            this.textAlert = this.$t(
-                                "auth.option_password.error.something_wrong"
-                            );
-                            break;
+                    this.$router.push("/centres");
+                    this.isOpenLoading = false;
+
+                    if (loginUserResponse.token) {
+                        this.$store.dispatch(
+                            "common/setUserToken",
+                            loginUserResponse.token
+                        );
+                        // Si existeix un token, vol dir que la sessió s'ha iniciat correctament
+                        this.$router.push("/centres");
+                    } else {
+                        // Si no hi ha un token, mostra un missatge d'error
+                        this.headerText = this.$t(
+                            "auth.option_password.error.something_wrong"
+                        );
+                        this.showAlert = true;
+                        throw new Error();
                     }
                 } catch (error) {
                     this.loginError = true;

@@ -42,8 +42,6 @@ const routes = [
         path: "/stocks",
         component: () => import("@/views/StocksPage.vue")
     },
-
-
     {
         path: "/alergenos",
         component: () => import("@/views/AlergensPage.vue"),

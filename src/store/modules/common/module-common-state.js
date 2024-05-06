@@ -9,4 +9,7 @@ export default {
         { name: "Catalán", value: "ca", ascii_code: "ca-ES", flag: flagCatalan },
     ],
     currentLocale: { name: "Español", value: "es", ascii_code: "es-ES", flag: flagSpain },
+    userToken:localStorage.getItem("userToken") !== "undefined"
+    ? JSON.parse(localStorage.getItem("userToken"))
+    : null,
 };
