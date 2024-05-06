@@ -27,7 +27,7 @@
                         <ion-buttons slot="start">
                             <ion-menu-button></ion-menu-button>
                         </ion-buttons>
-                        <ion-title>Menu</ion-title>
+                        <ion-title></ion-title>
                     </ion-toolbar>
                 </ion-header>
                 <ion-router-outlet id="main-content"  :key="$route.fullPath" /> 

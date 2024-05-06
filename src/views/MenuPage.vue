@@ -537,6 +537,10 @@ import { addOutline, close, save } from "ionicons/icons";
 
 import $menus from "@/services/appService/menus.js";
 
+import { useStore } from "vuex";
+
+const store = useStore();
+
 const currentDate = new Date();
 const currentYearMonth = ref("");
 const selectedDate = ref(
@@ -964,7 +968,7 @@ const plats = ref([
         ],
     },
     {
-        id: 26,
+        id: 3,
         type: 2,
         name: "Tiramisú",
         allergens: ["huevo", "lacteos"],
@@ -1094,6 +1098,10 @@ const getNextMonth = () => {
     month = month < 10 ? "0" + month : month;
     return `${year}-${month}`;
 };
+
+const userToken = computed(() => {
+    return store.getters["common/userToken"];
+});
 
 const minDate = computed(() => {
     let min = menus.value.reduce(
@@ -1243,7 +1251,7 @@ async function saveMenuDay(firstDish, secondDish, thirdDish) {
         
         // Combina el año y el mes de currentYearMonth con el día obtenido anteriormente
         const selectedDate = `${currentYearMonth.value}-${dayOfMonth}`;
-        await $menus.postMenu(selectedDate,firstDish.id, secondDish.id, thirdDish.id);
+        await $menus.postMenu(selectedDate,firstDish.id, secondDish.id, thirdDish.id,userToken.value);
     }
     showModal.value = false;
 }
@@ -1320,7 +1328,7 @@ const getTypeString = (type) => {
 onMounted(async() => {
     currentYearMonth.value = getCurrentYearMonth();
 
-    menus.value = await $menus.findAll();
+    menus.value = await $menus.findAll(userToken.value);
 
     if(isMobile.value){
         const options = {
