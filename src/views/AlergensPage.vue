@@ -75,12 +75,12 @@
                             label-placement="floating"></ion-textarea>
                     </ion-item>
                     <ion-item>
-                        <ion-select v-model="currentAlergeno.icon_route" :placeholder="$t('allergen.select_icon')" :label="$t('allergen.allergen_icon')">
+                        <ion-select v-model="currentAlergeno.icon_route" :placeholder="$t('allergen.select_icon')" :label="$t('allergen.allergen_icon')" interface="popover">
                             <ion-select-option
                                 v-for="allergy in allergies"
                                 :key="allergy.value"
                                 :value="allergy.value"
-                                >{{ allergy.label }}</ion-select-option
+                                >{{ $t("allergen."+allergy.label) }}</ion-select-option
                             >
                         </ion-select >
                         <ion-img

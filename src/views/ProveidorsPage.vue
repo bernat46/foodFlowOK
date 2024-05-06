@@ -3,54 +3,60 @@
         <ion-page>
             <ion-header>
                 <ion-toolbar>
-                    <ion-title>Receptes</ion-title>
+                    <ion-title>Providers</ion-title>
                 </ion-toolbar>
             </ion-header>
             <ion-content>
-            <div class="body">
-                <div class="header ion-padding">
-                    <ion-searchbar
-                        bar
-                        v-model="searchText"
-                        animated="true"
-                        mode="ios"
-                        :placeholder="$t('common.buscar')"
-                        show-clear-button="always"></ion-searchbar>
-                    <ion-button @click="openModal()">
-                        <ion-icon
-                            slot="icon-only"
-                            :icon="addOutline"></ion-icon>
-                    </ion-button>
+                <div class="body">
+                    <div class="header ion-padding">
+                        <ion-searchbar
+                            bar
+                            v-model="searchText"
+                            animated="true"
+                            mode="ios"
+                            :placeholder="$t('common.buscar')"
+                            show-clear-button="always"></ion-searchbar>
+                        <ion-button @click="openModal()">
+                            <ion-icon
+                                slot="icon-only"
+                                :icon="addOutline"></ion-icon>
+                        </ion-button>
+                    </div>
+                    <ion-grid>
+                        <ion-row>
+                            <ion-col
+                                size="12"
+                                size-md="6"
+                                size-lg="3"
+                                v-for="provider in filteredRecipes"
+                                :key="provider.id">
+                                <ion-card
+                                    class="proveidor-card"
+                                    :style="{
+                                        backgroundImage: `linear-gradient(20deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1)), url(${provider.image})`,
+                                    }">
+                                    <ion-card-header class="header">
+                                        <ion-card-title class="text-black">{{
+                                            provider.title
+                                        }}</ion-card-title>
+                                        <ion-button
+                                            @click="openModal(provider)">
+                                            <ion-icon
+                                                slot="icon-only"
+                                                :icon="
+                                                    pencilOutline
+                                                "></ion-icon>
+                                        </ion-button>
+                                    </ion-card-header>
+                                    <ion-card-content class="text-black">
+                                        {{ provider.description }}
+                                    </ion-card-content>
+                                </ion-card>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
                 </div>
-                <ion-grid>
-                    <ion-row>
-                        <ion-col
-                            size="12"
-                            size-md="6"
-                            size-lg="3"
-                            v-for="provider in filteredRecipes"
-                            :key="provider.id">
-                            <ion-card class="proveidor-card" :style="{ backgroundImage: `linear-gradient(20deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1)), url(${provider.image})`}">
-                                <ion-card-header class="header">
-                                    <ion-card-title class="text-black">{{
-                                        provider.title
-                                    }}</ion-card-title>
-                                    <ion-button @click="openModal(provider)">
-                                        <ion-icon
-                                            slot="icon-only"
-                                            :icon="pencilOutline"></ion-icon>
-                                    </ion-button>
-                                </ion-card-header>
-                                <ion-card-content class="text-black">
-                                    {{ provider.description }}
-                                </ion-card-content>
-                            </ion-card>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </div>
             </ion-content>
-        
         </ion-page>
         <ion-modal
             v-if="showModal"
@@ -72,24 +78,38 @@
             <ion-content>
                 <div>
                     <ion-item>
-                        <ion-textarea
+                        <ion-input
                             v-model="currentProvider.title"
                             :label="$t('common.titulo')"
-                            label-placement="floating"></ion-textarea>
+                            label-placement="floating"></ion-input>
                     </ion-item>
                     <ion-item>
-                        <ion-textarea
-                            v-model="currentProvider.description"
-                            :label="$t('common.descripcion')"
-                            label-placement="floating"></ion-textarea>
+                        <ion-input
+                            v-model="currentProvider.company_identifier"
+                            :label="$t('common.company_identifier')"
+                            label-placement="floating"></ion-input>
                     </ion-item>
                     <ion-item>
+                        <ion-input
+                            v-model="currentProvider.address"
+                            :label="$t('common.address')"
+                            label-placement="floating"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-input
+                            v-model="currentProvider.phone"
+                            type="tel"
+                            placeholder="xxx xxx xxx"
+                            :label="$t('common.phone')"
+                            label-placement="floating"></ion-input>
+                    </ion-item>
+                    <!-- <ion-item>
                         <ion-input v-model="currentProvider.image"
                         :label="$t('common.imagen')"
                         label-placement="floating" type="file" @change="handleFileInput($event)">
                         </ion-input>
                         <img :src="imageUrl" v-if="imageUrl" alt="Uploaded Image">
-                    </ion-item>     
+                    </ion-item>      -->
                     <div
                         class="ion-padding ion-align-items-center div-productos">
                         <ion-text>{{ $t("Productos") }}</ion-text>
@@ -152,7 +172,7 @@
                         <ion-button
                             fill="solid"
                             color="primary"
-                            @click="saveRecipe()"
+                            @click="saveProvider()"
                             >{{ $t("common.guardar") }}</ion-button
                         >
                     </ion-buttons>
@@ -183,15 +203,16 @@ import {
     IonFooter,
     IonModal,
     IonItem,
-    IonTextarea,
     IonInput,
     IonText,
 } from "@ionic/vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { pencilOutline, addOutline, close, trashOutline } from "ionicons/icons";
+import { useStore } from "vuex";
 
 import $proveidors from "@/services/appService/proveidors.js";
 
+const store = useStore();
 const searchText = ref("");
 const showModal = ref(false);
 const currentProvider = ref(null);
@@ -206,7 +227,6 @@ const proveidors = ref([
                 name: "Fideos",
                 quantity: 300,
                 unit: "g",
-                
             },
             {
                 name: "Mariscos",
@@ -239,7 +259,6 @@ const proveidors = ref([
                 name: "Fideos",
                 quantity: 300,
                 unit: "g",
-                
             },
             {
                 name: "Mariscos",
@@ -274,6 +293,10 @@ const filteredRecipes = computed(() => {
     );
 });
 
+const userToken = computed(() => {
+    return store.getters["common/userToken"];
+});
+
 const openModal = (provider = null) => {
     currentProvider.value = provider
         ? provider
@@ -283,9 +306,7 @@ const openModal = (provider = null) => {
 const addNewIngredient = () => {
     const defaultIngredientExists = currentProvider.value.productes.some(
         (product) =>
-            product.name === "" &&
-            product.quantity === 0 &&
-            product.unit === ""
+            product.name === "" && product.quantity === 0 && product.unit === ""
     );
     if (!defaultIngredientExists) {
         currentProvider.value.productes.push({
@@ -305,16 +326,32 @@ const deleteIngredient = (productToDelete) => {
         currentProvider.value.productes.splice(indexToDelete, 1);
     }
 };
-const saveRecipe = async() => {
+const saveProvider = async () => {
     if (!currentProvider.value.id) {
-        // Si la receta no tiene ID, la añadimos al array proveidors
-        proveidors.value.push(currentProvider.value);
-        await $proveidors.postRecipe()
+        await $proveidors.postProvider(
+            currentProvider.value.nom,
+            currentProvider.value.company_identifier,
+            currentProvider.value.phone,
+            currentProvider.value.address,
+            userToken.value
+        );
+    } else {
+        await $proveidors.putProvider(
+            currentProvider.value.id,
+            currentProvider.value.nom,
+            currentProvider.value.company_identifier,
+            currentProvider.value.phone,
+            currentProvider.value.address,
+            userToken.value
+        );
     }
     // Cerramos el modal
     showModal.value = false;
 };
 
+onMounted(async () => {
+    proveidors.value = await $proveidors.findAll(userToken.value);
+});
 </script>
 <style lang="scss" scoped>
 .header {
@@ -347,16 +384,13 @@ ion-title {
 .proveidor-card {
     border: 1px solid var(--ion-color-primary);
     background-size: cover;
-    
-
 }
 .text-black {
     color: black;
 }
 
-.background-div{
+.background-div {
     width: 100px;
     height: 100px;
 }
-
 </style>

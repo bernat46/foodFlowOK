@@ -52,7 +52,7 @@
         IonPage
     } from "@ionic/vue";
     import { useRouter } from "vue-router";
-    import { home,restaurantOutline,personAddOutline, gridOutline, locationOutline, peopleOutline, cubeOutline ,pulseOutline} from "ionicons/icons";
+    import { home,restaurantOutline, gridOutline, locationOutline, peopleOutline, cubeOutline ,pulseOutline,medkitOutline} from "ionicons/icons";
     import { computed } from 'vue';
     const router = useRouter();
 
@@ -61,14 +61,6 @@
         { 
             path: '/inici',
             meta: { title: 'Inici', icon: home } 
-        },
-        {
-            path: "/login",
-            meta: { title: "Login", icon: home },
-        },
-        {
-            path: "/register",
-            meta: { title: "Register", icon: personAddOutline },
         },
         {
             path: "/receptes",
@@ -84,7 +76,7 @@
         },
     {
         path: "/alergenos",   
-        meta: { title: "Alergens", icon: locationOutline  },
+        meta: { title: "Alergens", icon: medkitOutline  },
     },
         {
             path: "/proveidors",   
