@@ -31,8 +31,8 @@ export default {
             description: recipe.description,
             ingredients: JSON.stringify([{ id: "1", quantity: 100 }]),
             parent_recipe_id: 1, //Si no pot ser null que ha de ser
-            allergens: JSON.stringify([1, 2, 3]),
-            type_name: "Carbohidrats",
+            allergens: JSON.stringify(recipe.allergens),
+            type_name: recipe.type_name,
         });
 
         try {

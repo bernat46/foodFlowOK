@@ -12,6 +12,7 @@ export default {
     imagen:"Image",
     address:"Address",
     phone:"Phone",
+    allergies:"Allergies",
     mesos:{
         "1": "January",
         "2": "February",

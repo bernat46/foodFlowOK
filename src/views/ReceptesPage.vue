@@ -80,6 +80,48 @@
                             :label="$t('common.descripcion')"
                             label-placement="floating"></ion-textarea>
                     </ion-item>
+                    <ion-item>
+                        <ion-select
+                            v-model="currentRecipe.allergens"
+                            multiple
+                            :placeholder="$t('common.allergies')"
+                            label-placement="stacked"
+                            interface="popover">
+                            <ion-select-option
+                                v-for="allergy in allergens"
+                                :key="allergy.id"
+                                :value="allergy.id">
+                                {{ allergy.name }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-radio-group
+                            allow-empty-selection="true"
+                            v-model="currentRecipe.type_name"
+                            style="width: 100%">
+                            <ion-row style="width: 100%">
+                                <ion-col size="4">
+                                    <ion-radio
+                                        value="Carbohidrats"
+                                        justify="start"
+                                        >{{ $t("recetas.carbohidrats") }}</ion-radio
+                                    >
+                                </ion-col>
+                                <ion-col size="4">
+                                    <ion-radio value="Proteina" justify="start"
+                                        >{{ $t("recetas.proteina") }}</ion-radio
+                                    >
+                                </ion-col>
+                                <ion-col size="4">
+                                    <ion-radio value="Postre" justify="start"
+                                        >{{ $t("recetas.postre") }}</ion-radio
+                                    >
+                                </ion-col>
+                            </ion-row>
+                        </ion-radio-group>
+                    </ion-item>
+
                     <div
                         class="ion-padding ion-align-items-center div-ingredientes">
                         <ion-text>{{ $t("recetas.ingredientes") }}</ion-text>
@@ -92,9 +134,9 @@
                     <ion-grid>
                         <ion-row>
                             <ion-col
-                                v-for="(
-                                    ingredient, index
-                                ) in JSON.parse(currentRecipe.ingredients)"
+                                v-for="(ingredient, index) in currentRecipe.id
+                                    ? JSON.parse(currentRecipe.ingredients)
+                                    : currentRecipe.ingredients"
                                 :key="index"
                                 :size="
                                     currentRecipe.ingredients.length === 1
@@ -176,17 +218,23 @@ import {
     IonTextarea,
     IonInput,
     IonText,
+    IonSelect,
+    IonSelectOption,
+    IonRadio,
+    IonRadioGroup,
 } from "@ionic/vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted ,watch} from "vue";
 import { pencilOutline, addOutline, close, trashOutline } from "ionicons/icons";
 import { useStore } from "vuex";
 
 import $recipes from "@/services/appService/recipes.js";
+import $alergen from "@/services/appService/allergen.js";
 
 const searchText = ref("");
 const showModal = ref(false);
 const currentRecipe = ref(null);
 const store = useStore();
+const allergens = ref([]);
 const recipes = ref([
     {
         id: 1,
@@ -306,16 +354,23 @@ const deleteIngredient = (ingredientToDelete) => {
 };
 const saveRecipe = async () => {
     if (!currentRecipe.value.id) {
-        await $recipes.postRecipe(currentRecipe.value,null, userToken.value);
+        await $recipes.postRecipe(currentRecipe.value, null, userToken.value);
     } else {
-        await $recipes.putRecipe(currentRecipe.value,null, userToken.value);
+        await $recipes.putRecipe(currentRecipe.value, null, userToken.value);
     }
     // Cerramos el modal
     showModal.value = false;
 };
 
+watch(currentRecipe, (newVal) => {
+        if (newVal && newVal.id != null) {
+            currentRecipe.value.allergens = JSON.parse(newVal.allergens);
+        }
+    });
+
 onMounted(async () => {
     recipes.value = await $recipes.findAll(userToken.value);
+    allergens.value = await $alergen.findAll(userToken.value);
 });
 </script>
 <style lang="scss" scoped>
