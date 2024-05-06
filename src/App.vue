@@ -63,7 +63,6 @@ import {
     locationOutline,
     peopleOutline,
     cubeOutline,
-    pulseOutline,
     medkitOutline,
 } from "ionicons/icons";
 import { computed } from "vue";

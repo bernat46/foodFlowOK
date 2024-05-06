@@ -350,7 +350,7 @@ export default {
                         //Guardem el token a la store
                         this.$store.dispatch(
                             "common/setUserToken",
-                            loginUserResponse.token
+                            registerUserResponse.token
                         );
                         // Si existeix un token, vol dir que la sessió s'ha iniciat correctament
                         this.$router.push("/centres");
