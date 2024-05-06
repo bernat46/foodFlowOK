@@ -52,7 +52,8 @@
         <ion-modal
             :is-open="showModal"
             :initial-breakpoint="1"
-            :breakpoints="[0, 1]" @didDismiss="showModal = false">
+            :breakpoints="[0, 1]"
+            @didDismiss="showModal = false">
             <ion-header>
                 <ion-toolbar color="primary">
                     <ion-title color="white">{{
@@ -93,7 +94,7 @@
                             <ion-col
                                 v-for="(
                                     ingredient, index
-                                ) in currentRecipe.ingredients"
+                                ) in JSON.parse(currentRecipe.ingredients)"
                                 :key="index"
                                 :size="
                                     currentRecipe.ingredients.length === 1
@@ -176,14 +177,16 @@ import {
     IonInput,
     IonText,
 } from "@ionic/vue";
-import { ref, computed ,onMounted} from "vue";
+import { ref, computed, onMounted } from "vue";
 import { pencilOutline, addOutline, close, trashOutline } from "ionicons/icons";
 
 import $recipes from "@/services/appService/recipes.js";
+import { useStore } from "vuex";
 
 const searchText = ref("");
 const showModal = ref(false);
 const currentRecipe = ref(null);
+const store = useStore();
 const recipes = ref([
     {
         id: 1,
@@ -266,6 +269,9 @@ const filteredRecipes = computed(() => {
         recipe.title.toLowerCase().includes(searchText.value.toLowerCase())
     );
 });
+const userToken = computed(() => {
+    return store.getters["common/userToken"];
+});
 
 const openModal = (recipe = null) => {
     currentRecipe.value = recipe
@@ -298,21 +304,19 @@ const deleteIngredient = (ingredientToDelete) => {
         currentRecipe.value.ingredients.splice(indexToDelete, 1);
     }
 };
-const saveRecipe = async() => {
+const saveRecipe = async () => {
     if (!currentRecipe.value.id) {
-        // recipes.value.push(currentRecipe.value);
-        await $recipes.postRecipe(currentRecipe.value)
-    }else{
-        await $recipes.putRecipe(currentRecipe.value)
+        await $recipes.postRecipe(currentRecipe.value,null, userToken.value);
+    } else {
+        await $recipes.putRecipe(currentRecipe.value,null, userToken.value);
     }
     // Cerramos el modal
     showModal.value = false;
 };
 
-onMounted(async() => {
-    recipes.value = await $recipes.findAll();
+onMounted(async () => {
+    recipes.value = await $recipes.findAll(userToken.value);
 });
-
 </script>
 <style lang="scss" scoped>
 .header {
