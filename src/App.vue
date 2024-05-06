@@ -52,7 +52,7 @@
         IonPage
     } from "@ionic/vue";
     import { useRouter } from "vue-router";
-    import { home,restaurantOutline,personAddOutline, gridOutline, locationOutline, peopleOutline, cubeOutline } from "ionicons/icons";
+    import { home,restaurantOutline,personAddOutline, gridOutline, locationOutline, peopleOutline, cubeOutline ,pulseOutline} from "ionicons/icons";
     import { computed } from 'vue';
     const router = useRouter();
 
@@ -82,6 +82,10 @@
             path: "/centres",   
             meta: { title: "Centres", icon: locationOutline  },
         },
+    {
+        path: "/alergenos",   
+        meta: { title: "Alergens", icon: locationOutline  },
+    },
         {
             path: "/proveidors",   
             meta: { title: "Proveidors", icon: peopleOutline  },

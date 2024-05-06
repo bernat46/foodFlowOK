@@ -41,9 +41,16 @@ const routes = [
     {
         path: "/stocks",
         component: () => import("@/views/StocksPage.vue")
-    }
+    },
 
 
+    {
+        path: "/alergenos",
+        component: () => import("@/views/AlergensPage.vue"),
+        //   meta: {
+        //     requiresAuth: true,
+        // },
+    },
 ];
 
 const router = createRouter({

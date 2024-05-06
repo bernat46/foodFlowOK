@@ -14,8 +14,7 @@
                                 label-placement="floating"
                                 class="form-input"
                                 type="email"
-                                v-model.trim="email"
-                            ></ion-input>
+                                v-model.trim="email"></ion-input>
                         </ion-item>
                         <ion-item>
                             <div class="password-input-container">
@@ -24,15 +23,13 @@
                                     label-placement="floating"
                                     class="form-input"
                                     :type="visible ? 'text' : 'password'"
-                                    v-model="password"
-                                ></ion-input>
+                                    v-model="password"></ion-input>
 
                                 <ion-icon
                                     style="width: 20px"
                                     class="password-toggle-icon"
                                     :icon="visible ? eye : eyeOff"
-                                    @click="visible = !visible"
-                                ></ion-icon>
+                                    @click="visible = !visible"></ion-icon>
                             </div>
                         </ion-item>
                         <p class="text-error" v-if="loginError">
@@ -43,21 +40,22 @@
                             expand="block"
                             :disabled="!email || !password"
                             @click="loginFEvent()"
-                        >{{ $t("auth.option_password.login") }}
+                            >{{ $t("auth.option_password.login") }}
                         </ion-button>
                         <ion-button
                             color="primary"
                             expand="block"
-                            @click="$router.push('/register')"
-                        >
+                            @click="$router.push('/register')">
                             {{ $t("auth.options.register") }}
                         </ion-button>
                         <ion-button
                             fill="clear"
                             class="btn-face-auth recover-password"
                             color="secondary"
-                            @click="isForgotPasswordModalVisible = !isForgotPasswordModalVisible"
-                        >
+                            @click="
+                                isForgotPasswordModalVisible =
+                                    !isForgotPasswordModalVisible
+                            ">
                             {{ $t("auth.option_password.recover_password") }}
                         </ion-button>
                     </div>
@@ -82,7 +80,10 @@
                 }
             "
         /> -->
-        <ion-loading :message="$t('auth.options.logging_in')" :is-open="isOpenLoading"> </ion-loading>
+        <ion-loading
+            :message="$t('auth.options.logging_in')"
+            :is-open="isOpenLoading">
+        </ion-loading>
     </ion-page>
 </template>
 
@@ -104,6 +105,7 @@ import { fingerPrint } from "ionicons/icons";
 
 import LanguageChanger from "@/components/settings/LanguageChanger.vue";
 
+import $auth from "@/services/appService/auth.js";
 
 export default {
     components: {
@@ -144,38 +146,48 @@ export default {
         },
         closePasswordModal() {
             this.forgotPasswordKey++;
-            this.isForgotPasswordModalVisible = !this.isForgotPasswordModalVisible;
+            this.isForgotPasswordModalVisible =
+                !this.isForgotPasswordModalVisible;
         },
         async loginFEvent() {
             if (this.email && this.password) {
                 this.loginError = false;
                 try {
                     this.isOpenLoading = true;
-                    // let loginUserResponse = await this.$store.dispatch("auth/login", {
-                    //     email: this.email,
-                    //     password: this.password,
-                    // });
+                    const loginUserResponse = await $auth.login(
+                        this.email,
+                        this.password
+                    );
 
                     switch (loginUserResponse) {
                         case true:
                             break;
                         case "user_not_found":
-                            this.textAlert = this.$t("auth.option_password.error.user_not_found");
+                            this.textAlert = this.$t(
+                                "auth.option_password.error.user_not_found"
+                            );
                             break;
                         case "invalid_email":
-                            this.textAlert = this.$t("auth.option_password.error.invalid_email");
+                            this.textAlert = this.$t(
+                                "auth.option_password.error.invalid_email"
+                            );
                             break;
                         case "wrong_password":
-                            this.textAlert = this.$t("auth.option_password.error.wrong_password");
+                            this.textAlert = this.$t(
+                                "auth.option_password.error.wrong_password"
+                            );
                             break;
                         case "invalid_credentials":
-                            this.textAlert = this.$t("auth.option_password.error.invalid_credentials");
+                            this.textAlert = this.$t(
+                                "auth.option_password.error.invalid_credentials"
+                            );
                             break;
                         default:
-                            this.textAlert = this.$t("auth.option_password.error.something_wrong");
+                            this.textAlert = this.$t(
+                                "auth.option_password.error.something_wrong"
+                            );
                             break;
                     }
-
                 } catch (error) {
                     this.loginError = true;
                     this.isOpenLoading = false;
@@ -224,7 +236,7 @@ ion-col {
 }
 
 ion-item {
-     --background: var(--ion-color-step-850);
+    --background: var(--ion-color-step-850);
     border-radius: 15px;
     margin-bottom: 12px;
 }

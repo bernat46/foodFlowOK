@@ -535,6 +535,8 @@ import {
 import { ref, computed, onMounted } from "vue";
 import { addOutline, close, save } from "ionicons/icons";
 
+import $menus from "@/services/appService/menus.js";
+
 const currentDate = new Date();
 const currentYearMonth = ref("");
 const selectedDate = ref(
@@ -1234,8 +1236,15 @@ function openPopover(dishType) {
     showPopover.value = true;
 }
 
-function saveMenuDay(firstDish, secondDish, thirdDish) {
-    console.log(firstDish, secondDish, thirdDish);
+async function saveMenuDay(firstDish, secondDish, thirdDish) {
+    if (selectedDay.value) {
+        // Obtiene el día del mes con un 0 al principio si es necesario
+        const dayOfMonth = selectedDay.value.dayOfMonth < 10 ? '0' + selectedDay.value.dayOfMonth : selectedDay.value.dayOfMonth;
+        
+        // Combina el año y el mes de currentYearMonth con el día obtenido anteriormente
+        const selectedDate = `${currentYearMonth.value}-${dayOfMonth}`;
+        await $menus.postMenu(selectedDate,firstDish.id, secondDish.id, thirdDish.id);
+    }
     showModal.value = false;
 }
 function updateSelectedDate(event) {
@@ -1308,8 +1317,10 @@ const getTypeString = (type) => {
     }
 };
 
-onMounted(() => {
+onMounted(async() => {
     currentYearMonth.value = getCurrentYearMonth();
+
+    menus.value = await $menus.findAll();
 
     if(isMobile.value){
         const options = {
