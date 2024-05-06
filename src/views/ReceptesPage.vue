@@ -179,9 +179,9 @@ import {
 } from "@ionic/vue";
 import { ref, computed, onMounted } from "vue";
 import { pencilOutline, addOutline, close, trashOutline } from "ionicons/icons";
+import { useStore } from "vuex";
 
 import $recipes from "@/services/appService/recipes.js";
-import { useStore } from "vuex";
 
 const searchText = ref("");
 const showModal = ref(false);

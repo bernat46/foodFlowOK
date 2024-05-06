@@ -25,7 +25,7 @@
                             <ion-card class="alergeno-card">
                                 <ion-card-header class="header">
                                     <ion-card-title class="text-black">{{
-                                        alergeno.nombre
+                                        alergeno.name
                                     }}</ion-card-title>
                                     <ion-img
                                         :src="alergeno.icon_route"
@@ -75,17 +75,20 @@
                             label-placement="floating"></ion-textarea>
                     </ion-item>
                     <ion-item>
-                        <ion-input
-                            type="url"
-                            label="URL"
-                            accept="image/*"
-                            @change="handleImageUpload($event)" />
+                        <ion-select v-model="currentAlergeno.icon_route" :placeholder="$t('allergen.select_icon')" :label="$t('allergen.allergen_icon')">
+                            <ion-select-option
+                                v-for="allergy in allergies"
+                                :key="allergy.value"
+                                :value="allergy.value"
+                                >{{ allergy.label }}</ion-select-option
+                            >
+                        </ion-select >
+                        <ion-img
+                            v-if="currentAlergeno.icon_route"
+                            :src="currentAlergeno.icon_route"
+                            alt="imagen de alergeno"
+                            style="max-width: 100%" />
                     </ion-item>
-                    <img
-                        v-if="currentAlergeno.icon_route"
-                        :src="currentAlergeno.icon_route"
-                        alt="imagen de alergeno"
-                        style="max-width: 100%" />
                 </div>
             </ion-content>
             <ion-footer>
@@ -96,6 +99,12 @@
                             color="primary"
                             @click="saveAlergeno()"
                             >{{ $t("common.guardar") }}</ion-button
+                        >
+                        <ion-button v-if="currentAlergeno.id"
+                            fill="solid"
+                            color="primary"
+                            @click="deleteAlergeno()"
+                            >{{ $t("common.eliminar") }}</ion-button
                         >
                     </ion-buttons>
                 </ion-toolbar>
@@ -125,31 +134,28 @@ import {
     IonItem,
     IonImg,
     IonTextarea,
+    IonSelect,
+    IonSelectOption,
 } from "@ionic/vue";
 import { ref, computed, onMounted } from "vue";
 import { pencilOutline, addOutline, close } from "ionicons/icons";
+import { useStore } from "vuex";
 
 import $alergen from "@/services/appService/allergen.js";
 
+const store = useStore();
 const searchText = ref("");
 const showModal = ref(false);
 const currentAlergeno = ref(null);
-const alergenos = ref([
-    {
-        id: 1,
-        nombre: "Gluten",
-        icon_route: "/allergies/gluten.svg",
-    },
-    {
-        id: 2,
-        nombre: "Lactosa",
-        icon_route: "/allergies/lacteos.svg",
-    },
-    {
-        id: 3,
-        nombre: "Frutos secos",
-        icon_route: "/allergies/fsecos.svg",
-    },
+const alergenos = ref([]);
+const allergies = ref([
+    { value: "/allergies/carne.svg", label: "carne" },
+    { value: "/allergies/frsecos.svg", label: "frsecos" },
+    { value: "/allergies/gluten.svg", label: "gluten" },
+    { value: "/allergies/huevo.svg", label: "huevo" },
+    { value: "/allergies/lacteos.svg", label: "lacteos" },
+    { value: "/allergies/marisco.svg", label: "marisco" },
+    { value: "/allergies/pescado.svg", label: "pescado" },
 ]);
 
 const filteredAlergenos = computed(() => {
@@ -159,6 +165,9 @@ const filteredAlergenos = computed(() => {
     return alergenos.value.filter((alergeno) =>
         alergeno.nombre.toLowerCase().includes(searchText.value.toLowerCase())
     );
+});
+const userToken = computed(() => {
+    return store.getters["common/userToken"];
 });
 
 const openModal = (alergeno = null) => {
@@ -170,22 +179,44 @@ const openModal = (alergeno = null) => {
 
 const saveAlergeno = async () => {
     if (!currentAlergeno.value.id) {
-        await $alergen.postAllergen(currentAlergeno.value);
+        await $alergen.postAllergen(
+            currentAlergeno.value.name,
+            currentAlergeno.value.icon_route,
+            userToken.value
+        );
     } else {
-        await $alergen.putAllergen(currentAlergeno.value);
+        await $alergen.putAllergen(
+            currentAlergeno.value.id,
+            currentAlergeno.value.name,
+            currentAlergeno.value.icon_route,
+            userToken.value
+        );
     }
     // Cerramos el modal
     showModal.value = false;
+    alergenos.value = await $alergen.findAll(userToken.value);
+};
+const deleteAlergeno = async () => {
+    if (currentAlergeno.value.id) {
+        await $alergen.deleteAllergen(
+            currentAlergeno.value.id,
+            userToken.value
+        );
+    }
+    // Cerramos el modal
+    showModal.value = false;
+    alergenos.value = await $alergen.findAll(userToken.value);
 };
 
 const getClassName = (iconRoute) => {
+    if (!iconRoute) return;
     // Obtenemos la parte entre '/' y '.svg' de la ruta del ícono
     const className = iconRoute.split("/")[2].split(".")[0];
     return className;
 };
 
-onMounted(async() => {
-    alergenos.value = await $alergen.findAll();
+onMounted(async () => {
+    alergenos.value = await $alergen.findAll(userToken.value);
 });
 </script>
 

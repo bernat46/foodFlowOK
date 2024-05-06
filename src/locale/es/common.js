@@ -2,6 +2,7 @@ export default {
     titulo:"Título",
     descripcion:"Descripción",
     guardar:"Guardar",
+    eliminar:"Eliminar",
     nombre:"Nombre",
     cantidad:"Cantidad",
     unidad:"Unidad",
