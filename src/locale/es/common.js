@@ -3,6 +3,7 @@ export default {
     descripcion:"Descripción",
     guardar:"Guardar",
     eliminar:"Eliminar",
+    edit:"Editar",
     email:"Correo",
     company_identifier:"Identificador de la empresa",
     nombre:"Nombre",
@@ -13,6 +14,7 @@ export default {
     address:"Dirección",
     phone:"Teléfono",
     allergies:"Alergias",
+    select_month_year:"Selecciona mes y año",
     mesos:{
         1: "Enero",
         2: "Febrero",

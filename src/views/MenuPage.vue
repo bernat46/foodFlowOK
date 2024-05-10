@@ -14,7 +14,7 @@
                                 size="11"
                                 class="ion-datetime-button ion-padding-horizontal">
                                 <ion-label style="font-weight: bold"
-                                    >Selecciona mes y año</ion-label
+                                    >{{$t("common.select_month_year")}}</ion-label
                                 >
                                 <ion-datetime-button
                                     color="secondary"
@@ -179,7 +179,7 @@
                                             color="primary"
                                             fill="solid"
                                             @click="openModal(day)">
-                                            Editar
+                                            {{$t("common.editar")}}
                                         </ion-button>
                                     </ion-label>
                                 </ion-item>
@@ -277,7 +277,7 @@
                             <div
                                 v-if="selectedFirstDish.title == null"
                                 class="card-label">
-                                <label>Selecciona el primer</label>
+                                <label>{{ $t("recetas.select_first_dish") }}</label>
                             </div>
                             <template v-else>
                                 <div class="select-dish-class">
@@ -291,7 +291,7 @@
                                     </h2>
                                     <div class="ion-padding">
                                         <h3 class="ion-padding-bottom">
-                                            Ingredients:
+                                            {{ $t("recetas.ingredientes") }}:
                                         </h3>
                                         <div>
                                             <ion-chip
@@ -350,7 +350,7 @@
                             <div
                                 v-if="selectedSecondDish.title == null"
                                 class="card-label">
-                                <label>Selecciona el segundo</label>
+                                <label>{{ $t("recetas.select_second_dish") }}</label>
                             </div>
                             <template v-else>
                                 <div class="select-dish-class">
@@ -362,7 +362,7 @@
                                     </h2>
                                     <div class="ion-padding">
                                         <h3 class="ion-padding-bottom">
-                                            Ingredients:
+                                            {{ $t("recetas.ingredientes") }}:
                                         </h3>
                                         <div>
                                             <ion-chip
@@ -422,7 +422,7 @@
                             <div
                                 v-if="selectedDessertDish.title == null"
                                 class="card-label">
-                                <label>Selecciona el postre </label>
+                                <label>{{ $t("recetas.select_dessert") }}</label>
                             </div>
                             <template v-else>
                                 <div class="select-dish-class">
@@ -434,7 +434,7 @@
                                     </h2>
                                     <div class="ion-padding">
                                         <h3 class="ion-padding-bottom">
-                                            Ingredients:
+                                            {{ $t("recetas.ingredientes") }}:
                                         </h3>
                                         <div>
                                             <ion-chip
@@ -506,7 +506,7 @@
                                 )
                             ">
                             <ion-icon color slot="end" :icon="save"></ion-icon>
-                            Guardar
+                            {{ $t("common.save") }}
                         </ion-button>
                     </ion-buttons>
                 </ion-toolbar>

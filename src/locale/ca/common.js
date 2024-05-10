@@ -3,6 +3,7 @@ export default {
     descripcion: "Descripción",
     guardar: "Guardar",
     eliminar: "Eliminar",
+    edit: "Editar",
     company_identifier:"Codi de l'empresa",
     email: "Correu",
     nombre: "Nom",
@@ -13,6 +14,7 @@ export default {
     address:"Adreça",
     phone:"Telèfon",
     allergies:"Al·lèrgies",
+    select_month_year:"Selecciona mes any",
     mesos: {
         1: "Gener",
         2: "Febrer",
