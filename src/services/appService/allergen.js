@@ -14,10 +14,15 @@ export default {
             throw new Error("Respuesta no exitosa", error);
         }
     },
-    async getAllergen(id) {
+    async getAllergen(id, token) {
         const url = `allergens/${id}`;
         try {
-            const response = await appService.get(url);
+            const response = await appService.get(url, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response.data;
         } catch (error) {
             throw new Error("Respuesta no exitosa", error);
@@ -42,7 +47,7 @@ export default {
             throw new Error("Respuesta no exitosa", error);
         }
     },
-    async putAllergen(allergenId,nom, icon_route, token) {
+    async putAllergen(allergenId, nom, icon_route, token) {
         const url = `allergens/${allergenId}`;
         const data = new URLSearchParams({
             name: nom,

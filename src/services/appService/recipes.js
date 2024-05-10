@@ -14,10 +14,15 @@ export default {
             throw new Error("Respuesta no exitosa", error);
         }
     },
-    async getRecipe(id) {
+    async getRecipe(id, token) {
         const url = `recipes/${id}`;
         try {
-            const response = await appService.get(url);
+            const response = await appService.get(url, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             return response.data;
         } catch (error) {
             throw new Error("Respuesta no exitosa", error);

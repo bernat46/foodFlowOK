@@ -34,7 +34,8 @@
                             <ion-col
                                 size="1"
                                 class="ion-datetime-button ion-padding-horizontal ion-justify-content-center">
-                                <ion-button @click="createNewMenu()">
+                                <ion-button
+                                    @click="createNewMenu(getNextMonth())">
                                     <ion-icon
                                         slot="icon-only"
                                         :icon="addOutline"></ion-icon>
@@ -117,13 +118,13 @@
                                             }}</strong>
                                             <div
                                                 v-for="(
-                                                    idDish, mealIndex
+                                                    dish, mealIndex
                                                 ) in daysInMonth[
                                                     rowIndex * 7 + dayIndex
                                                 ].meals.dishes"
                                                 :key="mealIndex">
-                                                <div>
-                                                    {{ getPlat(idDish).name }}
+                                                <div v-if="dish && dish.title">
+                                                    {{ dish.title }}
                                                 </div>
                                             </div>
                                         </div>
@@ -145,7 +146,7 @@
                                 updateSelectedDate($event)
                             "></ion-datetime>
                         <ion-button
-                            @click="createNewMenu()"
+                            @click="createNewMenu(getNextMonth())"
                             class="newMenuButtonMobile">
                             <ion-icon
                                 slot="icon-only"
@@ -188,7 +189,7 @@
                                     :key="dishIndex"
                                     class="item-dish">
                                     <ion-label style="width: fit-content"
-                                        >{{ getPlat(dish).name }}
+                                        >{{ dish.title }}
                                         <span
                                             style="
                                                 font-size: 13px;
@@ -197,26 +198,32 @@
                                                 );
                                             "
                                             class="ion-text-capitalize"
-                                            >{{
-                                                getTypeString(
-                                                    getPlat(dish).type
-                                                )
-                                            }}</span
+                                            >{{ dish.type_name }}</span
                                         ></ion-label
                                     >
                                     <div class="icon-group">
                                         <div
-                                            v-for="(allergen, index) in getPlat(
-                                                dish
-                                            ).allergens"
+                                            v-for="(
+                                                allergen, index
+                                            ) in dish.allergens"
                                             :key="index"
                                             class="circle circle-mobile"
-                                            :class="allergen.toLowerCase()">
+                                            :class="
+                                                allergen.icon_route
+                                                    .split('/')
+                                                    .pop()
+                                                    .split('.')
+                                                    .shift()
+                                            ">
                                             <ion-icon
                                                 size="medium"
                                                 :src="
                                                     '/allergies/' +
-                                                    allergen.toLowerCase() +
+                                                    allergen.icon_route
+                                                        .split('/')
+                                                        .pop()
+                                                        .split('.')
+                                                        .shift() +
                                                     '.svg'
                                                 "
                                                 alt="allergen"></ion-icon>
@@ -268,19 +275,17 @@
                     <ion-card @click="openPopover(0)" id="firstOpenPopover">
                         <ion-card-content v-if="selectedDay">
                             <div
-                                v-if="selectedFirstDish.name == null"
+                                v-if="selectedFirstDish.title == null"
                                 class="card-label">
                                 <label>Selecciona el primer</label>
                             </div>
                             <template v-else>
                                 <div class="select-dish-class">
                                     <h2 class="ion-padding-horizontal">
-                                        {{ selectedFirstDish.name }}
+                                        {{ selectedFirstDish.title }}
                                         <span>
                                             {{
-                                                getTypeString(
-                                                    selectedFirstDish.type
-                                                )
+                                                selectedFirstDish.type_name
                                             }}</span
                                         >
                                     </h2>
@@ -292,7 +297,9 @@
                                             <ion-chip
                                                 v-for="(
                                                     ingredient, index
-                                                ) in selectedFirstDish.ingredients"
+                                                ) in JSON.parse(
+                                                    selectedFirstDish.ingredients
+                                                )"
                                                 size="small"
                                                 :key="index">
                                                 {{ ingredient }}
@@ -312,12 +319,22 @@
                                                 ) in selectedFirstDish.allergens"
                                                 :key="index"
                                                 class="circle"
-                                                :class="allergen.toLowerCase()">
+                                                :class="
+                                                    allergen.icon_route
+                                                        .split('/')
+                                                        .pop()
+                                                        .split('.')
+                                                        .shift()
+                                                ">
                                                 <ion-icon
                                                     size="large"
                                                     :src="
                                                         '/allergies/' +
-                                                        allergen.toLowerCase() +
+                                                        allergen.icon_route
+                                                            .split('/')
+                                                            .pop()
+                                                            .split('.')
+                                                            .shift() +
                                                         '.svg'
                                                     "
                                                     alt="allergen"></ion-icon>
@@ -331,18 +348,16 @@
                     <ion-card @click="openPopover(1)">
                         <ion-card-content v-if="selectedDay">
                             <div
-                                v-if="selectedSecondDish.name == null"
+                                v-if="selectedSecondDish.title == null"
                                 class="card-label">
                                 <label>Selecciona el segundo</label>
                             </div>
                             <template v-else>
                                 <div class="select-dish-class">
                                     <h2 class="ion-padding-horizontal">
-                                        {{ selectedSecondDish.name }}
+                                        {{ selectedSecondDish.title }}
                                         <span>{{
-                                            getTypeString(
-                                                selectedSecondDish.type
-                                            )
+                                            selectedSecondDish.type_name
                                         }}</span>
                                     </h2>
                                     <div class="ion-padding">
@@ -353,7 +368,9 @@
                                             <ion-chip
                                                 v-for="(
                                                     ingredient, index
-                                                ) in selectedSecondDish.ingredients"
+                                                ) in JSON.parse(
+                                                    selectedSecondDish.ingredients
+                                                )"
                                                 size="small"
                                                 :key="index">
                                                 {{ ingredient }}
@@ -373,12 +390,22 @@
                                                 ) in selectedSecondDish.allergens"
                                                 :key="index"
                                                 class="circle"
-                                                :class="allergen.toLowerCase()">
+                                                :class="
+                                                    allergen.icon_route
+                                                        .split('/')
+                                                        .pop()
+                                                        .split('.')
+                                                        .shift()
+                                                ">
                                                 <ion-icon
                                                     size="large"
                                                     :src="
                                                         '/allergies/' +
-                                                        allergen.toLowerCase() +
+                                                        allergen.icon_route
+                                                            .split('/')
+                                                            .pop()
+                                                            .split('.')
+                                                            .shift() +
                                                         '.svg'
                                                     "
                                                     alt="allergen"></ion-icon>
@@ -393,18 +420,16 @@
                     <ion-card @click="openPopover(2)">
                         <ion-card-content v-if="selectedDay">
                             <div
-                                v-if="selectedDessertDish.name == null"
+                                v-if="selectedDessertDish.title == null"
                                 class="card-label">
                                 <label>Selecciona el postre </label>
                             </div>
                             <template v-else>
                                 <div class="select-dish-class">
                                     <h2 class="ion-padding-horizontal">
-                                        {{ selectedDessertDish.name }}
+                                        {{ selectedDessertDish.title }}
                                         <span>{{
-                                            getTypeString(
-                                                selectedDessertDish.type
-                                            )
+                                            selectedDessertDish.type_name
                                         }}</span>
                                     </h2>
                                     <div class="ion-padding">
@@ -415,7 +440,9 @@
                                             <ion-chip
                                                 v-for="(
                                                     ingredient, index
-                                                ) in selectedDessertDish.ingredients"
+                                                ) in JSON.parse(
+                                                    selectedDessertDish.ingredients
+                                                )"
                                                 size="small"
                                                 :key="index">
                                                 {{ ingredient }}
@@ -436,12 +463,22 @@
                                                 ) in selectedDessertDish.allergens"
                                                 :key="index"
                                                 class="circle"
-                                                :class="allergen.toLowerCase()">
+                                                :class="
+                                                    allergen.icon_route
+                                                        .split('/')
+                                                        .pop()
+                                                        .split('.')
+                                                        .shift()
+                                                ">
                                                 <ion-icon
                                                     size="large"
                                                     :src="
                                                         '/allergies/' +
-                                                        allergen.toLowerCase() +
+                                                        allergen.icon_route
+                                                            .split('/')
+                                                            .pop()
+                                                            .split('.')
+                                                            .shift() +
                                                         '.svg'
                                                     "
                                                     alt="allergen"></ion-icon>
@@ -489,14 +526,14 @@
                     :key="plat.id"
                     @click="selectPlat(plat)">
                     <ion-label
-                        >{{ plat.name }} |
+                        >{{ plat.title }} |
                         <span
                             style="
                                 font-size: 13px;
                                 color: var(--ion-color-secondary);
                             "
                             class="ion-text-capitalize"
-                            >{{ getTypeString(plat.type) }}</span
+                            >{{ plat.type_name }}</span
                         ></ion-label
                     >
                 </ion-item>
@@ -536,6 +573,8 @@ import { ref, computed, onMounted } from "vue";
 import { addOutline, close, save } from "ionicons/icons";
 
 import $menus from "@/services/appService/menus.js";
+import $recipes from "@/services/appService/recipes.js";
+import $allergen from "@/services/appService/allergen.js";
 
 import { useStore } from "vuex";
 
@@ -552,6 +591,7 @@ const showModal = ref(false);
 const showPopover = ref(false);
 const newMonthMenu = ref(null);
 const selectedDay = ref(null);
+const menusFilteredByMonth = ref(null);
 const daysMonthRef = ref({});
 const ionListMenuDays = ref(null);
 const selectedFirstDish = ref({
@@ -1104,29 +1144,54 @@ const userToken = computed(() => {
 });
 
 const minDate = computed(() => {
-    let min = menus.value.reduce(
-        (min, menu) => (menu.date < min ? menu.date : min),
-        menus.value[0].date
-    );
-    const [year, month] = min.split("-");
-    const monthPadded = month.padStart(2, "0"); // Afegeix un zero al davant si el mes és menor que 10
-    min = `${year}-${monthPadded}-01T00:00:00`; // Canviem l'ordre de l'any i el mes, i afegim el dia i l'hora
-    return min;
+    if (menus.value.length === 0) {
+        const [year, month] = currentYearMonth.value.split("-");
+        const monthPadded = month.padStart(2, "0"); // Añadir un cero al principio si el mes es menor que 10
+        return `${year}-${monthPadded}-01T00:00:00`; // Cambiar el orden de año y mes, y añadir el día y la hora
+    } else {
+        let min = menus.value.reduce(
+            (min, menu) => (menu.date < min ? menu.date : min),
+            menus.value[0].date
+        );
+        const [year, month] = min.split("-");
+        const monthPadded = month.padStart(2, "0"); // Añadir un cero al principio si el mes es menor que 10
+        min = `${year}-${monthPadded}-01T00:00:00`; // Cambiar el orden de año y mes, y añadir el día y la hora
+        return min;
+    }
 });
+
+// const maxDate = computed(() => {
+//     let max = menus.value.reduce(
+//         (max, menu) => (menu.date > max ? menu.date : max),
+//         menus.value[0].date
+//     );
+//     const [year, month] = max.split("-");
+//     const lastDayOfMonth = new Date(year, month, 0).getDate(); // Obtiene el último día del mes
+//     const monthPadded = month.padStart(2, "0"); // Añade un cero al principio si el mes es menor que 10
+//     max = `${year}-${monthPadded}-${lastDayOfMonth}T23:59:59`; // Cambia el orden del año y el mes, y añade el día y la hora
+//     return max;
+// });
 
 const maxDate = computed(() => {
-    let max = menus.value.reduce(
-        (max, menu) => (menu.date > max ? menu.date : max),
-        menus.value[0].date
-    );
-    const [year, month] = max.split("-");
-    const lastDayOfMonth = new Date(year, month, 0).getDate(); // Obtiene el último día del mes
-    const monthPadded = month.padStart(2, "0"); // Añade un cero al principio si el mes es menor que 10
-    max = `${year}-${monthPadded}-${lastDayOfMonth}T23:59:59`; // Cambia el orden del año y el mes, y añade el día y la hora
-    return max;
+    if (menus.value.length === 0) {
+        const [year, month] = currentYearMonth.value.split("-");
+        const lastDayOfMonth = new Date(year, month, 0).getDate(); // Obtiene el último día del mes
+        const monthPadded = month.padStart(2, "0"); // Añade un cero al principio si el mes es menor que 10
+        return `${year}-${monthPadded}-${lastDayOfMonth}T23:59:59`; // Cambia el orden del año y el mes, y añade el día y la hora
+    } else {
+        let max = menus.value.reduce(
+            (max, menu) => (menu.date > max ? menu.date : max),
+            menus.value[0].date
+        );
+        const [year, month] = max.split("-");
+        const lastDayOfMonth = new Date(year, month, 0).getDate(); // Obtiene el último día del mes
+        const monthPadded = month.padStart(2, "0"); // Añade un cero al principio si el mes es menor que 10
+        max = `${year}-${monthPadded}-${lastDayOfMonth}T23:59:59`; // Cambia el orden del año y el mes, y añade el día y la hora
+        return max;
+    }
 });
 
-const daysInMonth = computed(() => {
+function createDaysInMonth() {
     if (!selectedDate.value) return [];
 
     const date = new Date(selectedDate.value);
@@ -1195,12 +1260,13 @@ const daysInMonth = computed(() => {
     }
 
     return days;
-});
+}
 
-const createNewMenu = () => {
-    const newMonthCreated = getNextMonth();
-    selectedDate.value = newMonthCreated;
-    currentYearMonth.value = newMonthCreated;
+const daysInMonth = ref(createDaysInMonth());
+
+const createNewMenu = (date) => {
+    selectedDate.value = date;
+    currentYearMonth.value = date;
 
     // Crear un nuevo menú con todos los días llenos de platos con valor '-'
     const emptyMenu = daysInMonth.value.map(() => {
@@ -1213,7 +1279,7 @@ const createNewMenu = () => {
     // Crear un nuevo objeto de menú
     const newMenu = {
         id: menus.value.length + 1, // Asignar una nueva id al menú
-        date: newMonthCreated, // Asignar la fecha del mes siguiente
+        date: date, // Asignar la fecha del mes siguiente
         meals: emptyMenu, // Asignar el menú vacío
     };
 
@@ -1234,9 +1300,9 @@ function openModal(day) {
     selectedDay.value = day;
     showModal.value = true;
     if (day.meals && day.meals.dishes.length > 0) {
-        selectedFirstDish.value = getPlat(day.meals.dishes[0]);
-        selectedSecondDish.value = getPlat(day.meals.dishes[1]);
-        selectedDessertDish.value = getPlat(day.meals.dishes[2]);
+        selectedFirstDish.value = day.meals.dishes[0];
+        selectedSecondDish.value = day.meals.dishes[1];
+        selectedDessertDish.value = day.meals.dishes[2];
     }
 }
 function openPopover(dishType) {
@@ -1247,11 +1313,20 @@ function openPopover(dishType) {
 async function saveMenuDay(firstDish, secondDish, thirdDish) {
     if (selectedDay.value) {
         // Obtiene el día del mes con un 0 al principio si es necesario
-        const dayOfMonth = selectedDay.value.dayOfMonth < 10 ? '0' + selectedDay.value.dayOfMonth : selectedDay.value.dayOfMonth;
-        
+        const dayOfMonth =
+            selectedDay.value.dayOfMonth < 10
+                ? "0" + selectedDay.value.dayOfMonth
+                : selectedDay.value.dayOfMonth;
+
         // Combina el año y el mes de currentYearMonth con el día obtenido anteriormente
         const selectedDate = `${currentYearMonth.value}-${dayOfMonth}`;
-        await $menus.postMenu(selectedDate,firstDish.id, secondDish.id, thirdDish.id,userToken.value);
+        await $menus.postMenu(
+            selectedDate,
+            firstDish.id,
+            secondDish.id,
+            thirdDish.id,
+            userToken.value
+        );
     }
     showModal.value = false;
 }
@@ -1270,6 +1345,11 @@ function obtenerMes(selectedDate) {
     return mes;
 }
 
+async function getAllergen(id) {
+    const allergen = await $allergen.getAllergen(id, userToken.value);
+    return allergen;
+}
+
 const selectPlat = (plat) => {
     selectedPlat.value = plat;
     showPopover.value = false;
@@ -1278,17 +1358,18 @@ const selectPlat = (plat) => {
         if (!selectedDay.value.meals.dishes) {
             selectedDay.value.meals.dishes = {};
         }
+        console.log(tipoPlato.value);
         switch (tipoPlato.value) {
             case 0:
-                selectedDay.value.meals.dishes[0] = plat.id;
+                selectedDay.value.meals.dishes[0] = plat;
                 selectedFirstDish.value = plat;
                 break;
             case 1:
-                selectedDay.value.meals.dishes[1] = plat.id;
+                selectedDay.value.meals.dishes[1] = plat;
                 selectedSecondDish.value = plat;
                 break;
             case 2:
-                selectedDay.value.meals.dishes[2] = plat.id;
+                selectedDay.value.meals.dishes[2] = plat;
                 selectedDessertDish.value = plat;
                 break;
             default:
@@ -1300,7 +1381,7 @@ const selectPlat = (plat) => {
 const filteredPlats = computed(() => {
     return plats.value.filter((plat) => {
         const nameMatches = searchText.value
-            ? plat.name.toLowerCase().includes(searchText.value.toLowerCase())
+            ? plat.title.toLowerCase().includes(searchText.value.toLowerCase())
             : true;
         let typeMatches = true;
         if (tipoPlato.value === 0 || tipoPlato.value === 1) {
@@ -1312,25 +1393,76 @@ const filteredPlats = computed(() => {
     });
 });
 
-const getTypeString = (type) => {
-    switch (type) {
-        case 0:
-            return "proteina";
-        case 1:
-            return "carbohidrat";
-        case 2:
-            return "postre";
-        default:
-            return "desconocido";
-    }
-};
+async function updateAllergens(dish) {
+    dish.allergens = JSON.parse(dish.allergens);
+    const updatedAllergens = await Promise.all(
+        dish.allergens.map(async (allergenId) => await getAllergen(allergenId))
+    );
+    dish.allergens = updatedAllergens;
+    return dish;
+}
 
-onMounted(async() => {
+onMounted(async () => {
     currentYearMonth.value = getCurrentYearMonth();
+    //Generar menu buit per si s'ha d'afegir mes plats en el mes actual
+    createNewMenu(currentYearMonth.value);
+
+    plats.value = await $recipes.findAll(userToken.value);
+
+    plats.value.forEach(async (plat) => {
+        const allergens = JSON.parse(plat.allergens);
+        const updatedAllergens = await Promise.all(
+            allergens.map(async (allergenId) => await getAllergen(allergenId))
+        );
+        plat.allergens = updatedAllergens;
+    });
 
     menus.value = await $menus.findAll(userToken.value);
 
-    if(isMobile.value){
+    menusFilteredByMonth.value = menus.value.filter((menu) =>
+        menu.date.startsWith(selectedDate.value)
+    );
+
+    menusFilteredByMonth.value.forEach(async (plat) => {
+        const dayOfMonth = new Date(plat.date).getDate();
+
+        const targetDay = daysInMonth.value.find(
+            (day) => day.dayOfMonth === dayOfMonth
+        );
+        if (targetDay) {
+            // Afegir els plats a targetDay.meals.dishes
+            const firstCourse = await $recipes.getRecipe(
+                plat.first_course,
+                userToken.value
+            );
+            const secondCourse = await $recipes.getRecipe(
+                plat.second_course,
+                userToken.value
+            );
+            const dessert = await $recipes.getRecipe(
+                plat.dessert,
+                userToken.value
+            );
+
+            const updatedFirstCourse = await updateAllergens(
+                firstCourse,
+                userToken
+            );
+            const updatedSecondCourse = await updateAllergens(
+                secondCourse,
+                userToken
+            );
+            const updatedDessert = await updateAllergens(dessert, userToken);
+
+            targetDay.meals.dishes.push(
+                updatedFirstCourse,
+                updatedSecondCourse,
+                updatedDessert
+            );
+        }
+    });
+
+    if (isMobile.value) {
         const options = {
             root: ionListMenuDays.value.$el,
             rootMargin: "-20px 0px -100% 0px",
@@ -1357,11 +1489,10 @@ onMounted(async() => {
                 }
             });
         }, options);
-    
+
         Object.values(daysMonthRef.value).forEach((item) => {
             observer.observe(item.$el);
         });
-        
     }
 });
 </script>
