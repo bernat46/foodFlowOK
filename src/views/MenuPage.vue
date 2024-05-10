@@ -1291,10 +1291,10 @@ const createNewMenu = (date) => {
 };
 
 // Función para obtener el nombre de un plato dado su ID
-function getPlat(id) {
-    const plat = plats.value.find((plat) => plat.id === id);
-    return plat ? plat : "Selecciona un plat";
-}
+// function getPlat(id) {
+//     const plat = plats.value.find((plat) => plat.id === id);
+//     return plat ? plat : "Selecciona un plat";
+// }
 
 function openModal(day) {
     selectedDay.value = day;
@@ -1320,13 +1320,24 @@ async function saveMenuDay(firstDish, secondDish, thirdDish) {
 
         // Combina el año y el mes de currentYearMonth con el día obtenido anteriormente
         const selectedDate = `${currentYearMonth.value}-${dayOfMonth}`;
-        await $menus.postMenu(
-            selectedDate,
-            firstDish.id,
-            secondDish.id,
-            thirdDish.id,
-            userToken.value
-        );
+        if(selectedDay.value.meals.id){
+            await $menus.putMenu(
+                selectedDay.value.meals.id,
+                selectedDate,
+                firstDish.id,
+                secondDish.id,
+                thirdDish.id,
+                userToken.value
+            );
+        }else{
+            await $menus.postMenu(
+                selectedDate,
+                firstDish.id,
+                secondDish.id,
+                thirdDish.id,
+                userToken.value
+            );
+        }
     }
     showModal.value = false;
 }
@@ -1430,6 +1441,7 @@ onMounted(async () => {
             (day) => day.dayOfMonth === dayOfMonth
         );
         if (targetDay) {
+            targetDay.meals.id=plat.id;
             // Afegir els plats a targetDay.meals.dishes
             const firstCourse = await $recipes.getRecipe(
                 plat.first_course,
