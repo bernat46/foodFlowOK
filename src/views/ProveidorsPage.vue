@@ -62,7 +62,8 @@
             v-if="showModal"
             :is-open="showModal"
             :initial-breakpoint="1"
-            :breakpoints="[0, 1]">
+            :breakpoints="[0, 1]"
+            @willDismiss="showModal = false">
             <ion-header>
                 <ion-toolbar color="primary">
                     <ion-title color="white">{{
@@ -112,7 +113,7 @@
                     </ion-item>      -->
                     <div
                         class="ion-padding ion-align-items-center div-productos">
-                        <ion-text>{{ $t("Productos") }}</ion-text>
+                        <ion-text>{{ $t("stock.products") }}</ion-text>
                         <ion-button fill="clear" @click="addNewIngredient()">
                             <ion-icon
                                 slot="icon-only"

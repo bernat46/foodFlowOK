@@ -18,6 +18,7 @@
                     <ion-icon :icon="route.meta.icon" slot="start"></ion-icon>
                     <ion-label>{{ route.meta.title }}</ion-label>
                 </ion-item>
+                <language-changer :is-floating-button="true" />
             </ion-content>
         </ion-menu>
         <ion-page id="main-content">
@@ -28,7 +29,7 @@
                     </ion-buttons>
                     <ion-buttons slot="end">
                         <ion-button @click="logout()">
-                            Logout
+                            {{ $t("common.logout") }}
                         </ion-button>
                     </ion-buttons>
                     <ion-title></ion-title>
@@ -53,6 +54,7 @@ import {
     IonRouterOutlet,
     IonMenuButton,
     IonButtons,
+    IonButton,
     IonPage,
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
@@ -66,6 +68,8 @@ import {
     medkitOutline,
 } from "ionicons/icons";
 import { computed } from "vue";
+import LanguageChanger from "@/components/settings/LanguageChanger.vue";
+
 const router = useRouter();
 
 // Define the routes and their metadata

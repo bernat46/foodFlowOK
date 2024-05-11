@@ -242,7 +242,8 @@
             :backdrop-dismiss="false"
             :initial-breakpoint="1"
             :breakpoints="[0, 1]"
-            class="selectDish">
+            class="selectDish"
+            @willDismiss="showModal = false">
             <ion-header>
                 <ion-toolbar color="primary">
                     <ion-title style="color: white" class="ion-text-capitalize"

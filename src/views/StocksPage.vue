@@ -9,19 +9,19 @@
       <ion-content>
         <div class="body">
           <div class="header ion-padding">
-            <ion-button @click="openOrderModal()">Create Order</ion-button>
-            <ion-button @click="openReceiveModal()">Receive Order</ion-button>
+            <ion-button @click="openOrderModal()">{{ $t("stock.create_order") }}</ion-button>
+            <ion-button @click="openReceiveModal()">{{ $t("stock.receive_order") }}</ion-button>
           </div>
         </div>
         <ion-list>
           <ion-list-header>
-            <h2>Orders</h2>
+            <h2>{{ $t("stock.orders") }}</h2>
           </ion-list-header>
           <ion-item v-for="order in orders" :key="order.id" @click="viewOrderDetails(order)">
             <ion-label>
               <h2>{{ order.title }}</h2>
-              <p>Date: {{ order.date }}</p>
-              <p>Status: {{ order.status }}</p>
+              <p>{{ $t("common.date") }}: {{ order.date }}</p>
+              <p>{{ $t("stock.status") }}: {{ order.status }}</p>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -33,10 +33,11 @@
       :is-open="showOrderModal"
       :initial-breakpoint="1"
       :breakpoints="[0, 1]"
+      @willDismiss="showOrderModal = false"
     >
       <ion-header>
         <ion-toolbar color="primary">
-          <ion-title>Create Order</ion-title>
+          <ion-title>{{ $t("stock.create_order") }}</ion-title>
           <ion-buttons slot="end">
             <ion-button @click="showOrderModal = false">
               <ion-icon slot="icon-only" :icon="close"></ion-icon>
@@ -49,7 +50,7 @@
           <ion-item>
             <ion-select
               v-model="selectedProvider"
-              :label="common.proveedor"
+              :label="$t('stock.provider')"
               label-placement="floating"
               @ionChange="fetchProviderProducts(selectedProvider)"
               :disabled="addedProducts.length > 0"
@@ -65,7 +66,7 @@
           <ion-item v-if="providerProducts.length > 0">
             <ion-select
               v-model="selectedProduct"
-              :label="common.producto"
+              :label="$t('stock.product')"
               label-placement="floating"
             >
               <ion-select-option
@@ -82,11 +83,11 @@
                 :placeholder="selectedProduct ? `Cantidad (${selectedProduct.unit})` : 'Cantidad'"
               ></ion-input>
             </ion-item>
-            <ion-button @click="addProductToOrder()">Add Product</ion-button>
+            <ion-button @click="addProductToOrder()">{{ $t("stock.add_product") }}</ion-button>
           </ion-item>
           <!-- Productes afegits al modal -->
           <div class="product-list">
-            <ion-list-header>Productes</ion-list-header>
+            <ion-list-header>{{ $t("stock.products") }}</ion-list-header>
             <ion-list>
               <ion-item v-for="(product, index) in addedProducts" :key="index">
                 <ion-row class="order-product">
@@ -117,7 +118,7 @@
         <ion-toolbar>
           <ion-buttons slot="end">
             <ion-button fill="solid" color="primary" @click="createOrder()">{{
-              common.guardar
+              $t("common.guardar")
             }}</ion-button>
           </ion-buttons>
         </ion-toolbar>
@@ -130,10 +131,11 @@
       :is-open="showReceiveModal"
       :initial-breakpoint="1"
       :breakpoints="[0, 1]"
+      @willDismiss="showReceiveModal = false"
     >
       <ion-header>
         <ion-toolbar color="primary">
-          <ion-title>Receive Order</ion-title>
+          <ion-title>{{ $t("stock.receive_order") }}</ion-title>
           <ion-buttons slot="end">
             <ion-button @click="showReceiveModal = false">
             </ion-button>
@@ -145,15 +147,15 @@
     </ion-modal>
 
     <!-- Modal detalls de la ordre -->
-    <ion-modal v-if="showOrderDetailsModal" :is-open="showOrderDetailsModal">
+    <ion-modal v-if="showOrderDetailsModal" :is-open="showOrderDetailsModal" @willDismiss="showOrderDetailsModal = false">
       <ion-content>
   
         <h2>{{ selectedOrder.title }}</h2>
-        <p>Date: {{ selectedOrder.date }}</p>
-        <p>Status: {{ selectedOrder.status }}</p>
+        <p>{{ $t("common.date", 1) }}: {{ selectedOrder.date }}</p>
+        <p>{{ $t("stock.status", 1) }}: {{ selectedOrder.status }}</p>
         <!-- LListar productes -->
         <ion-list>
-          <ion-list-header>Products</ion-list-header>
+          <ion-list-header>{{ $t("stock.products") }}</ion-list-header>
           <ion-item v-for="(product, index) in selectedOrder.products" :key="index">
             <ion-label>{{ product.name }}</ion-label>
             <ion-label slot="end">{{ product.quantity }} {{ product.unit }}</ion-label>
@@ -163,7 +165,7 @@
       <ion-footer>
         <ion-toolbar>
           <ion-buttons slot="end">
-            <ion-button @click="showOrderDetailsModal = false">Close</ion-button>
+            <ion-button @click="showOrderDetailsModal = false">{{ $t("common.close") }}</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-footer>
@@ -188,10 +190,13 @@ import {
   IonCol,
   IonIcon,
   IonRow,
-  IonInput
+  IonInput,
+  IonButtons,
+  IonLabel,
+  IonFooter,
 } from "@ionic/vue";
 import { ref } from "vue";
-import { trashOutline } from "ionicons/icons";
+import { trashOutline,close } from "ionicons/icons";
 
 
 const proveidors = ref([
@@ -231,14 +236,6 @@ const orders = ref([
     ]
   }
 ])
-
-
-const common = {
-  proveedor: "Proveedor",
-  producto: "Producto",
-  guardar: "Guardar",
-  cantidad: "Cantidad"
-};
 
 const showOrderModal = ref(false);
 const showReceiveModal = ref(false);

@@ -59,27 +59,10 @@
                             {{ $t("auth.option_password.recover_password") }}
                         </ion-button>
                     </div>
-
-                    <!-- <alert-pop
-                        :is-open="showAlert"
-                        :headerText="$t('auth.options.coming_soon')"
-                        :alertButtons="alertButtons"
-                        @dismiss="toggleAlert"
-                    /> -->
                 </ion-col>
             </ion-row>
         </ion-grid>
         <language-changer :is-floating-button="true" />
-        <!-- <forgot-password-modal
-            :key="forgotPasswordKey"
-            :is-modal-open="isForgotPasswordModalVisible"
-            @close-modal="closePasswordModal"
-            @success="
-                () => {
-                    this.forgotPasswordAlert = true;
-                }
-            "
-        /> -->
         <ion-loading
             :message="$t('auth.options.logging_in')"
             :is-open="isOpenLoading">

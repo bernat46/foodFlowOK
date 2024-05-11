@@ -9,7 +9,7 @@
         <ion-content>
             <div class="body">
                 <div class="title-content">
-                    <h2 class="page-title">Centres</h2>
+                    <h2 class="page-title">{{ $t('centres.centres') }}</h2>
                     <div>
                         <ion-icon :icon="addOutline" class="icon" @click="openModal('alta')" id="open-modal"></ion-icon>
                         <ion-icon :icon="trashOutline" class="icon"></ion-icon>
@@ -41,7 +41,7 @@
                                 <br>
                                 Carrer aragò, 1234
                             </p>
-                            <h5><strong>Contacte</strong></h5>
+                            <h5><strong>{{ $t('centres.contacte') }}</strong></h5>
                             <p class="pgf-2">
                                 Joaquim Quim
                                 <br>
@@ -78,7 +78,7 @@
                                     <br>
                                     Carrer aragò, 1234
                                 </p>
-                                <h5><strong>Contacte</strong></h5>
+                                <h5><strong>{{ $t('centres.contacte') }}</strong></h5>
                                 <p class="pgf-2">
                                     Joaquim Quim
                                     <br>
@@ -98,24 +98,24 @@
                 <ion-header>
                   <ion-toolbar>
                     <ion-buttons slot="start">
-                      <ion-button @click="closeModal('alta')">Tancar</ion-button>
+                      <ion-button @click="closeModal('alta')">{{$t('common.close')}}</ion-button>
                     </ion-buttons>
-                    <ion-title>Donar d'alta</ion-title>
+                    <ion-title>{{ $t('centres.donar_dalta') }}</ion-title>
                     <ion-buttons slot="end">
-                        <ion-button :strong="true" @click="registerNewItem()">Guardar</ion-button>
+                        <ion-button :strong="true" @click="registerNewItem()">{{$t('common.guardar')}}</ion-button>
                     </ion-buttons>
                   </ion-toolbar>
                 </ion-header>
                 <ion-content class="ion-padding">
-                  <h5>Dades centre</h5>
-                    <ion-input v-model="newItem.nom" label="Nom Centre (únic)" type="text" label-placement="stacked" ref="input" placeholder="Barcelona I"></ion-input>
-                    <ion-input v-model="newItem.direccio" label="Direcció" type="text" label-placement="stacked" ref="input" placeholder="Aragó 1"></ion-input>
-                    <ion-input v-model="newItem.img" label="Imatge" type="text" label-placement="stacked" ref="input"></ion-input>
+                  <h5>{{ $t('centres.dades_centre') }}</h5>
+                    <ion-input v-model="newItem.nom" :label="$t('common.nombre_cenrtro')" type="text" label-placement="stacked" ref="input" placeholder="Barcelona I"></ion-input>
+                    <ion-input v-model="newItem.direccio" :label="$t('common.address')" type="text" label-placement="stacked" ref="input" placeholder="Aragó 1"></ion-input>
+                    <ion-input v-model="newItem.img" :label="$t('common.imagen')" type="text" label-placement="stacked" ref="input"></ion-input>
 
-                    <h5>Dades persona contacte</h5>
-                    <ion-input v-model="newItem.nomP" label="Nom" type="text" label-placement="stacked" ref="input"></ion-input>
-                    <ion-input v-model="newItem.tel" label="Telèfon" type="tel" label-placement="stacked" ref="input"></ion-input>
-                    <ion-input v-model="newItem.email" label="Correu" type="email" label-placement="stacked" ref="input"></ion-input>
+                    <h5>{{ $t('centres.dades_persona_contacte') }}</h5>
+                    <ion-input v-model="newItem.nomP" :label="$t('common.nombre')" type="text" label-placement="stacked" ref="input"></ion-input>
+                    <ion-input v-model="newItem.tel" :label="$t('common.phone')" type="tel" label-placement="stacked" ref="input"></ion-input>
+                    <ion-input v-model="newItem.email" :label="$t('common.email')" type="email" label-placement="stacked" ref="input"></ion-input>
                 </ion-content>
               </ion-modal>
 
@@ -124,21 +124,21 @@
                 <ion-header>
                     <ion-toolbar>
                     <ion-buttons slot="start">
-                        <ion-button @click="closeModal('modify')">Tancar</ion-button>
+                        <ion-button @click="closeModal('modify')">{{$t('common.close')}}</ion-button>
                     </ion-buttons>
                     <ion-title>Editar Centre</ion-title>
                     <ion-buttons slot="end">
-                        <ion-button :strong="true" @click="closeModal('modify')">Modificar</ion-button>
+                        <ion-button :strong="true" @click="closeModal('modify')">{{$t('common.edit')}}</ion-button>
                     </ion-buttons>
                     </ion-toolbar>
                 </ion-header>
                 <ion-content class="ion-padding">
-                    <h5>Dades centre</h5>
+                    <h5>{{ $t('centres.dades_centre') }}</h5>
                     <ion-input v-model="editData.nom" label="Nom Centre (únic)" type="text" label-placement="stacked" ref="input" placeholder="Barcelona I"></ion-input>
                     <ion-input v-model="editData.direccio" label="Direcció" type="text" label-placement="stacked" ref="input" placeholder="Aragó 1"></ion-input>
                     <ion-input v-model="editData.img" label="Imatge" type="text" label-placement="stacked" ref="input"></ion-input>
 
-                    <h5>Dades persona contacte</h5>
+                    <h5>{{ $t('centres.dades_persona_contacte') }}</h5>
                     <ion-input v-model="editData.nomP" label="Nom" type="text" label-placement="stacked" ref="input"></ion-input>
                     <ion-input v-model="editData.tel" label="Telèfon" type="tel" label-placement="stacked" ref="input"></ion-input>
                     <ion-input v-model="editData.email" label="Correu" type="email" label-placement="stacked" ref="input"></ion-input>
