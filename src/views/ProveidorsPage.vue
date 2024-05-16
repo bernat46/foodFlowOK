@@ -30,22 +30,11 @@
                                 size-lg="3"
                                 v-for="provider in filteredRecipes"
                                 :key="provider.id">
-                                <ion-card
-                                    class="proveidor-card"
-                                    :style="{
-                                        backgroundImage: `linear-gradient(20deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1)), url(${provider.image})`,
-                                    }">
+                                <ion-card class="proveidor-card">
                                     <ion-card-header class="header">
-                                        <ion-card-title class="text-black">{{
-                                            provider.title
-                                        }}</ion-card-title>
-                                        <ion-button
-                                            @click="openModal(provider)">
-                                            <ion-icon
-                                                slot="icon-only"
-                                                :icon="
-                                                    pencilOutline
-                                                "></ion-icon>
+                                        <ion-card-title class="text-black">{{ provider.title }}</ion-card-title>
+                                        <ion-button @click="openModal(provider)">
+                                            <ion-icon slot="icon-only" :icon="pencilOutline"></ion-icon>
                                         </ion-button>
                                     </ion-card-header>
                                     <ion-card-content class="text-black">
@@ -58,17 +47,10 @@
                 </div>
             </ion-content>
         </ion-page>
-        <ion-modal
-            v-if="showModal"
-            :is-open="showModal"
-            :initial-breakpoint="1"
-            :breakpoints="[0, 1]"
-            @willDismiss="showModal = false">
+        <ion-modal v-if="showModal" :is-open="showModal" :initial-breakpoint="1" :breakpoints="[0, 1]" @willDismiss="showModal = false">
             <ion-header>
                 <ion-toolbar color="primary">
-                    <ion-title color="white">{{
-                        currentProvider.title
-                    }}</ion-title>
+                    <ion-title color="white">{{ currentProvider.title }}</ion-title>
                     <ion-buttons slot="end">
                         <ion-button @click="showModal = false">
                             <ion-icon slot="icon-only" :icon="close"></ion-icon>
@@ -104,34 +86,18 @@
                             :label="$t('common.phone')"
                             label-placement="floating"></ion-input>
                     </ion-item>
-                    <!-- <ion-item>
-                        <ion-input v-model="currentProvider.image"
-                        :label="$t('common.imagen')"
-                        label-placement="floating" type="file" @change="handleFileInput($event)">
-                        </ion-input>
-                        <img :src="imageUrl" v-if="imageUrl" alt="Uploaded Image">
-                    </ion-item>      -->
-                    <div
-                        class="ion-padding ion-align-items-center div-productos">
+                    <div class="ion-padding ion-align-items-center div-productos">
                         <ion-text>{{ $t("stock.products") }}</ion-text>
                         <ion-button fill="clear" @click="addNewIngredient()">
-                            <ion-icon
-                                slot="icon-only"
-                                :icon="addOutline"></ion-icon>
+                            <ion-icon slot="icon-only" :icon="addOutline"></ion-icon>
                         </ion-button>
                     </div>
                     <ion-grid>
                         <ion-row>
                             <ion-col
-                                v-for="(
-                                    product, index
-                                ) in currentProvider.productes"
+                                v-for="(product, index) in currentProvider.productes"
                                 :key="index"
-                                :size="
-                                    currentProvider.productes.length === 1
-                                        ? '12'
-                                        : '12'
-                                "
+                                :size="currentProvider.productes.length === 1 ? '12' : '12'"
                                 class="product-col">
                                 <ion-item class="name">
                                     <ion-input
@@ -158,9 +124,7 @@
                                     class="delete-product-button"
                                     fill="clear"
                                     @click="deleteIngredient(product)">
-                                    <ion-icon
-                                        slot="icon-only"
-                                        :icon="trashOutline"></ion-icon>
+                                    <ion-icon slot="icon-only" :icon="trashOutline"></ion-icon>
                                 </ion-button>
                             </ion-col>
                         </ion-row>
@@ -170,12 +134,7 @@
             <ion-footer>
                 <ion-toolbar>
                     <ion-buttons slot="end">
-                        <ion-button
-                            fill="solid"
-                            color="primary"
-                            @click="saveProvider()"
-                            >{{ $t("common.guardar") }}</ion-button
-                        >
+                        <ion-button fill="solid" color="primary" @click="saveProvider()">{{ $t("common.guardar") }}</ion-button>
                     </ion-buttons>
                 </ion-toolbar>
             </ion-footer>
@@ -220,69 +179,91 @@ const currentProvider = ref(null);
 const proveidors = ref([
     {
         id: 1,
-        title: "Proveïdor1",
+        title: "Pastas gallo",
         description: "Pastas y arroces.",
         image: "src/assets/images/escola-pia.jpg",
         productes: [
             {
                 name: "Fideos",
-                quantity: 300,
+                quantity: 10,
                 unit: "g",
             },
             {
-                name: "Mariscos",
-                quantity: 300,
+                name: "Spaghettis",
+                quantity: 150,
+                unit: "kg",
+            },
+            {
+                name: "Estrellitas",
+                quantity: 400,
                 unit: "g",
             },
             {
-                name: "Mariscos",
-                quantity: 300,
-                unit: "g",
-            },
-            {
-                name: "Mariscos",
-                quantity: 300,
-                unit: "g",
-            },
-            {
-                name: "Mariscos",
-                quantity: 300,
-                unit: "g",
+                name: "Laminas lasaña",
+                quantity: 10,
+                unit: "Caja/5",
             },
         ],
     },
     {
         id: 2,
-        title: "Proveïdor2",
-        description: "Precocinados y salsas.",
+        title: "Legumbres y precocinados",
+        description: "Legumbres y precocinados.",
         productes: [
             {
-                name: "Fideos",
+                name: "Garbanzaos",
                 quantity: 300,
-                unit: "g",
+                unit: "kg",
             },
             {
-                name: "Mariscos",
+                name: "Lentejas",
                 quantity: 300,
-                unit: "g",
+                unit: "kg",
             },
             {
-                name: "Mariscos",
+                name: "Pasta con pesto",
                 quantity: 300,
-                unit: "g",
-            },
-            {
-                name: "Mariscos",
-                quantity: 300,
-                unit: "g",
-            },
-            {
-                name: "Mariscos",
-                quantity: 300,
-                unit: "g",
-            },
+                unit: "Caja/10",
+            }
         ],
     },
+    {
+        id: 3,
+        title: "Congelados",
+        description: "Congelados y otros",
+        productes: [
+            {
+                name: "Rabas",
+                quantity: 7,
+                unit: "kg",
+            },
+            {
+                name: "Merluza",
+                quantity: 12,
+                unit: "u",
+            },
+            {
+                name: "Nuggets",
+                quantity: 20,
+                unit: "Caja/20",
+            },
+            {
+                name: "Espinacas",
+                quantity: 4,
+                unit: "kg",
+            },
+            {
+                name: "Masa Pizza",
+                quantity: 12,
+                unit: "u",
+            },
+            {
+                name: "Salteado verduras",
+                quantity: 0,
+                unit: "g",
+            }
+        ],
+    }
 ]);
 
 const filteredRecipes = computed(() => {
@@ -300,10 +281,11 @@ const userToken = computed(() => {
 
 const openModal = (provider = null) => {
     currentProvider.value = provider
-        ? provider
+        ? { ...provider }
         : { id: null, title: "", description: "", productes: [] };
     showModal.value = true;
 };
+
 const addNewIngredient = () => {
     const defaultIngredientExists = currentProvider.value.productes.some(
         (product) =>
@@ -327,26 +309,17 @@ const deleteIngredient = (productToDelete) => {
         currentProvider.value.productes.splice(indexToDelete, 1);
     }
 };
+
 const saveProvider = async () => {
     if (!currentProvider.value.id) {
-        await $proveidors.postProvider(
-            currentProvider.value.nom,
-            currentProvider.value.company_identifier,
-            currentProvider.value.phone,
-            currentProvider.value.address,
-            userToken.value
-        );
+        currentProvider.value.id = Math.max(...proveidors.value.map(p => p.id)) + 1;
+        proveidors.value.push({ ...currentProvider.value });
     } else {
-        await $proveidors.putProvider(
-            currentProvider.value.id,
-            currentProvider.value.nom,
-            currentProvider.value.company_identifier,
-            currentProvider.value.phone,
-            currentProvider.value.address,
-            userToken.value
-        );
+        const index = proveidors.value.findIndex(provider => provider.id === currentProvider.value.id);
+        if (index !== -1) {
+            proveidors.value[index] = { ...currentProvider.value };
+        }
     }
-    // Cerramos el modal
     showModal.value = false;
 };
 
@@ -354,6 +327,7 @@ onMounted(async () => {
     proveidors.value = await $proveidors.findAll(userToken.value);
 });
 </script>
+
 <style lang="scss" scoped>
 .header {
     display: flex;

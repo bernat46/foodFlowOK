@@ -15,6 +15,7 @@ export default {
     imagen:"Imagen",
     address:"Dirección",
     phone:"Teléfono",
+    people:"Comensales",
     allergies:"Alergias",
     logout:"Cerrar sessión",
     date:"Fecha",

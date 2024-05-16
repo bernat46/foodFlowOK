@@ -15,6 +15,7 @@ export default {
     imagen:"Image",
     address:"Address",
     phone:"Phone",
+    people:"People",
     allergies:"Allergies",
     logout:"Logout",
     date:"Date",

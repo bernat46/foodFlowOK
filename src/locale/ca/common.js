@@ -13,6 +13,7 @@ export default {
     unidad: "Unitat",
     buscar: "Buscar",
     imagen: "image",
+    people:"Comensales",
     address:"Adreça",
     phone:"Telèfon",
     logout:"Tancar sessió",
